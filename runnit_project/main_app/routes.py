@@ -37,6 +37,7 @@ def home() :
 
     if "user" in session :
         user = session["user"]
+        
     else :
         user = None
 
@@ -244,6 +245,11 @@ def create_post():
 # @admin_required
 # @login_required
 
+@login_required
+@app.route("/signup_for_course")
+def sign_up_for_course():
+    pass
+    
 
 @app.route("/mypanel")
 def admin_panel():
