@@ -105,9 +105,9 @@ a,i,input[type="submit"], form button{ -webkit-transition : all 0.2s linear 0s; 
 }
 .landing-layer .search-form form input{
    background-color: #fff;
-   border-radius: 3px;
-   -moz-border-radius: 3px;
-   -webkit-border-radius: 3px;
+   border-radius: 15px;
+   -moz-border-radius: 15px;
+   -webkit-border-radius: 15px;
    width: 100%;
    line-height: 50px;
    border:0;
@@ -124,12 +124,12 @@ a,i,input[type="submit"], form button{ -webkit-transition : all 0.2s linear 0s; 
    left: 1px;
    top: 1px;
    border:0;
-   -webkit-border-top-left-radius: 3px;
-  -webkit-border-bottom-left-radius: 3px;
-  -moz-border-radius-topleft: 3px;
-  -moz-border-radius-bottomleft: 3px;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
+   -webkit-border-top-left-radius: 15px;
+  -webkit-border-bottom-left-radius: 15px;
+  -moz-border-radius-topleft: 15px;
+  -moz-border-radius-bottomleft: 15px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
 }
 .landing-layer .search-form form button i{
    position: relative;
