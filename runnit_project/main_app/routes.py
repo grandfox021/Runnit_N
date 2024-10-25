@@ -1,29 +1,20 @@
-from flask import session,request,flash,redirect,render_template,url_for,jsonify   # type: ignore
+from flask import session,request,flash,redirect,render_template,url_for,jsonify # type: ignore
 from .translations import translations
-from flask_mailman import Mail,EmailMessage # type: ignore
+from flask_mailman import Mail,EmailMessage  # type: ignore
 from .decorators import admin_required,login_required
 import os
 from .forms import PostForm
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db
-from .models import User,Post,Superuser,Admin
-
-
-
+from .models import User,Post,Superuser,Admin,Course
+from werkzeug.utils import secure_filename
 
 s = URLSafeTimedSerializer(app.secret_key)
 mail = Mail(app)
 
-
-
-
-# Initialize the database
-@app.before_request
-def create_tables():
-    db.create_all()
-    if not "language" in session:
-        session["language"] = 'fa'
-
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/set_language/<lang>')
@@ -214,9 +205,8 @@ def reset_with_token(token):
 
 
 
-# @admin_required
-# @login_required
-
+@admin_required
+@login_required
 @app.route("/create_post", methods=["GET", "POST"])
 def create_post():
     form = PostForm()
@@ -225,9 +215,18 @@ def create_post():
         title = form.title.data
         body = form.body.data
         image = form.image.data  # Handle the file upload if provided
-        if image:
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image.filename))
-        # Assuming the logged-in user's ID is in session
+        if image and image.filename != '':
+            if allowed_file(image.filename):  # Check if an image was uploaded
+                filename = secure_filename(image.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+            else:
+                flash(translations[session['language']]['not_supported_format']) 
+                return redirect(url_for('create_post'))
+        else:
+            image_path = app.DEFAULT_IMAGE_PATH_FOR_POST  # Use default image if no image was uploaded
+
+ 
         user_id = session['user_id']  
 
         # Save the new post to the database
@@ -250,15 +249,19 @@ def create_post():
 def sign_up_for_course():
     pass
     
-
-@app.route("/mypanel")
+    
+@app.route("/admin")
+@admin_required    
+@login_required
 def admin_panel():
 
-    user_id = session.get("user_id")
-    User.query.filter_by(user_id)
-
+    user_id = session["user_id"]
+    print(user_id)
+    user = User.query.filter_by(user_id = user_id).first()
+    courses = Course.query.filter_by(user_id = user_id)
+    posts = Post.query.filter_by(user_id = user_id)
     
-    return render_template("admin_panenl.html")
+    return render_template("admin_panel.html",user=user,courses = courses,posts=posts)
 
 @app.route("/resume_upload")
 @login_required
@@ -273,10 +276,11 @@ def course() :
 
     return render_template("archive.html")
 
-@app.route("/post/")
-def detail_post():
+@app.route("/post/<int:post_id>")
+def post_detail(post_id):
+    post = Post.query.filter_by(post_id=post_id).first()
 
-    return render_template("single.html")
+    return render_template("post_detail.html",post=post)
 
 @app.route('/user/account')
 def user_account():
@@ -284,3 +288,7 @@ def user_account():
     user = session['user']
     return render_template("account.html",user = user)
 
+@app.route("/detail_demo")
+def detail_post_demo() :
+
+    return render_template("single.html")
