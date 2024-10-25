@@ -15,7 +15,7 @@
                                 <img src="./../static/images/pic/avatar.jpg">
                             </div>
                             <div class="detail">
-                                <span>  {{user}}</span>
+                                <span>  {{intern.firstname}}</span>
                                 <span> عضویت : 01/01/1403 </span>
                             </div>
                         </div>
@@ -24,11 +24,12 @@
                             <header><h3> میز کار </h3></header>
                             <div class="inner">
                                 <ul>
-                                    <li><a href=""> مشاهده حساب کابری </a></li>
+
                                     <li><a href=""> ویرایش حساب کابری </a></li>
                                     <li><a href=""> تغییر رمز عبور </a></li>
-                                    <li><a href=""> تنظیمات حساب کاربری </a></li>
-                                    <li><a href=""> خروج از حساب کاربری </a></li>
+                                    <li><a href="url_for('phone_submit')"> ثبت شماره همراه</a></li>
+                                    <li><a href="url_for('resume_submit')"> ارسال رزومه</a></li>
+                                    <li><a href="{{url_for('logout')}}"> خروج از حساب کاربری </a></li>
                                 </ul>
                             </div>
                         </section>
@@ -41,11 +42,10 @@
                             <div class="account-information">
                                 <h3> اطلاعات کاربری </h3>
                                 <ul>
-                                    <li> <i class="zmdi zmdi-account"></i> نام و نام خانوادگی : حسن بوذرپور </li>
-                                    <li> <i class="zmdi zmdi-assignment-account"></i> نام کاربری :  imadmadaeni </li>
-                                    <li> <i class="zmdi zmdi-email"></i> ایمیل : hbtk320@gmail.com</li>
+                                    <li> <i class="zmdi zmdi-account"></i> نام و نام خانوادگی : {{intern.firstname}} {{intern.latname}} </li>
+                                    <li> <i class="zmdi zmdi-email"></i> ایمیل : {{intern.email}}</li>
                                     <li> <i class="zmdi zmdi-calendar-check"></i> تاریخ عضویت : 01/01/1395 </li>
-                                    <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : 0912000000 </li>
+                                    <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if intern.phone %}{{intern.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید {% endif %}</li>
                                 </ul>
                             </div>
                         </div>  

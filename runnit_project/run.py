@@ -53,6 +53,10 @@ initialization_done = False
 
 @app.before_request
 def create_initials():
+    
+    if not "language" in session:
+        session["language"] = 'fa'
+
     global initialization_done
     if not initialization_done:
         db.create_all()
@@ -72,13 +76,7 @@ def create_initials():
         password="me001"
         )
 
-
-
-        if not "language" in session:
-            session["language"] = 'fa'
-
         initialization_done = True
-
 
 
 

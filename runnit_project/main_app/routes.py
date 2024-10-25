@@ -12,6 +12,8 @@ from werkzeug.utils import secure_filename
 s = URLSafeTimedSerializer(app.secret_key)
 mail = Mail(app)
 
+
+
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -26,8 +28,10 @@ def set_language(lang):
 @app.route("/home")
 def home() :
 
-    if "user" in session :
-        user = session["user"]
+    if "user_id" in session :
+        user_id = session.get("user_id")
+        user = User.query.filter_by(user_id = user_id).first()
+
         
     else :
         user = None
@@ -121,7 +125,8 @@ def signup() :
 @app.route('/logout')
 def logout():
 
-    session.clear()
+    session.pop("user_id")
+    session.pop("user")
     flash("you have been loged out !")
     return redirect(url_for('home'))
 
@@ -256,7 +261,7 @@ def sign_up_for_course():
 def admin_panel():
 
     user_id = session["user_id"]
-    print(user_id)
+
     user = User.query.filter_by(user_id = user_id).first()
     courses = Course.query.filter_by(user_id = user_id)
     posts = Post.query.filter_by(user_id = user_id)
@@ -265,7 +270,7 @@ def admin_panel():
 
 @app.route("/resume_upload")
 @login_required
-def post_resume():
+def rseume_submit():
 
 
     return render_template("upload_resume.html")
@@ -282,13 +287,23 @@ def post_detail(post_id):
 
     return render_template("post_detail.html",post=post)
 
+@login_required
 @app.route('/user/account')
 def user_account():
 
-    user = session['user']
-    return render_template("account.html",user = user)
+    user_id= session['user_id']
+    intern = User.query.filter_by(user_id = user_id).first()
+    
+    return render_template("account.html",intern = intern)
 
 @app.route("/detail_demo")
 def detail_post_demo() :
 
     return render_template("single.html")
+
+@app.route("/all-posts")
+def all_posts():
+
+    posts = Post.query.all()
+
+    return render_template("all_posts.html", posts = posts)
