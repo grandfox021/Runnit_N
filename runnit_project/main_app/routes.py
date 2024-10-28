@@ -43,6 +43,16 @@ def home() :
 
     return render_template("home.html", user = user )
 
+@app.route("/courses", methods=['GET'])
+def courses() :
+    
+    context = {
+        'courses': [1,2,3,4]
+    }
+    return render_template("course_list.html", context=context)
+
+
+
 
 #region archive
 @app.route("/archive", methods=['GET'])
