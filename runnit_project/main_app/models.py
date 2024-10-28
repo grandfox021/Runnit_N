@@ -173,6 +173,8 @@ class MBTITest(db.Model):
 
 # Course Model
 class Course(db.Model):
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     course_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     body = db.Column(db.Text, nullable=False)

@@ -46,7 +46,8 @@ translations = {
         'edit_post': 'Edit Post',
         'current_image': 'Current Image:',
         'email' : 'Email',
-        'submit' : 'Submit'
+        'submit' : 'Submit',
+        'not_supported_format' : 'this format is not supported only (jpg,jpeg,png) is acceptable'
     },
     'fa': {
         'language': 'fa',
@@ -95,6 +96,7 @@ translations = {
         'current_image': 'عکس فعلی:',
         'email' : 'ایمیل',
         'submit' : 'تایید',
-        'username_already_taken' : 'این ایمیل قبلا ثبت شده است'
+        'username_already_taken' : 'این ایمیل قبلا ثبت شده است',
+        'not_supported_format' : 'قابل ارسال است (jpg,png,jpeg) این فرمت پشتیبانی نمیشود فقط فرمت های '
     }
 }
