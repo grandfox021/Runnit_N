@@ -5,13 +5,17 @@ from .decorators import admin_required,login_required
 import os
 from .forms import PostForm
 from itsdangerous import URLSafeTimedSerializer
-from . import app,db
+from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
 from .models import User,Post,Superuser,Admin,Course
 from werkzeug.utils import secure_filename
+from twilio.rest import Client
+import random
+
 
 s = URLSafeTimedSerializer(app.secret_key)
 mail = Mail(app)
 
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -196,6 +200,33 @@ def reset_with_token(token):
 
     return render_template('new_password.html', translations=translations[session["language"]])
 
+
+
+@login_required
+@app.route('/send_verification', methods=['POST'])
+def send_verification():
+
+    user =User.query.filter_by(user_id = session.get("user_id")) 
+    phone_number = request.form.get('phone_number')
+    verification_code = random.randint(100000, 999999)
+    session['verification_code'] = verification_code
+
+    # Send SMS
+    message = client.messages.create(
+        body=f'Your verification code is: {verification_code}',
+        from_=TWILIO_PHONE_NUMBER,
+        to=phone_number
+    )
+    return "Verification code sent!"
+
+
+@app.route('/verify_code', methods=['POST'])
+def verify_code():
+    user_code = request.form.get('code')
+    if 'verification_code' in session and session['verification_code'] == int(user_code):
+        return "Phone number verified successfully!"
+    else:
+        return "Verification failed!", 400
 
 
 # Define superuser details here

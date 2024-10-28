@@ -14,6 +14,12 @@ UPLOAD_FOLDER = 'runnit_project/main_app/static/images/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+# Twilio credentials
+TWILIO_ACCOUNT_SID = 'ACa916e0171cb19f5f9ee1988dafa48ee3'
+TWILIO_AUTH_TOKEN = '0e1c876c17e02f100cd6f25943afdf00'
+TWILIO_PHONE_NUMBER = '+989900987398'
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
