@@ -6,3 +6,10 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     body = TextAreaField('Body', validators=[DataRequired()])
     image = FileField('Image')
+
+
+class CourseForm(FlaskForm):
+
+    name = StringField('Title', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])
+    image = FileField('Image')

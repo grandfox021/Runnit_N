@@ -1,5 +1,5 @@
-from main_app import app,db
-from main_app.models import Superuser,Admin
+from runnit_project import app,db
+from runnit_project.models import Superuser,Admin
 from flask import session
 
 

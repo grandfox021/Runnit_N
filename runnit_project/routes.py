@@ -3,10 +3,11 @@ from .translations import translations
 from flask_mailman import Mail,EmailMessage  # type: ignore
 from .decorators import admin_required,login_required
 import os
-from .forms import PostForm
+from .forms import PostForm,CourseForm
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
-from .models import User,Post,Superuser,Admin,Course
+from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_IMAGE_PATH_FOR_RESUME
+from .models import User,Post,Superuser,Admin,Course,Resume
 from werkzeug.utils import secure_filename
 from twilio.rest import Client
 import random
@@ -114,13 +115,13 @@ def signup() :
         last_name = request.form['lastname']
         email = request.form['email']
         password = request.form['password']
-
+        image =  DEFAULT_IMAGE_PATH_FOR_USER 
         if User.query.filter_by(email=email).first() :
             flash(translations[session['language']]['username_already_taken'],"info") 
             return redirect(url_for("signup"))
 
         # hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
-        new_user = User(firstname=first_name,lastname = last_name ,email = email, password=password)
+        new_user = User(firstname=first_name,lastname = last_name ,email = email, password=password,profile_pic = image)
         
         db.session.add(new_user)
         db.session.commit()
@@ -250,10 +251,9 @@ def verify_code():
 #     return render_template("create_post.html")
 
 
-
+@app.route("/create_post", methods=["GET", "POST"])
 @admin_required
 @login_required
-@app.route("/create_post", methods=["GET", "POST"])
 def create_post():
     form = PostForm()
     
@@ -261,7 +261,7 @@ def create_post():
         title = form.title.data
         body = form.body.data
         image = form.image.data  # Handle the file upload if provided
-        if image and image.filename != '':
+        if image and image.filename !="":
             if allowed_file(image.filename):  # Check if an image was uploaded
                 filename = secure_filename(image.filename)
                 image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -270,13 +270,13 @@ def create_post():
                 flash(translations[session['language']]['not_supported_format']) 
                 return redirect(url_for('create_post'))
         else:
-            image_path = app.DEFAULT_IMAGE_PATH_FOR_POST  # Use default image if no image was uploaded
+            image_path = DEFAULT_IMAGE_PATH_FOR_POST  # Use default image if no image was uploaded
 
  
         user_id = session['user_id']  
 
         # Save the new post to the database
-        post = Post(title=title, body=body, image=image.filename if image else None, user_id=user_id)
+        post = Post(title=title, body=body, image=image_path, user_id=user_id)
 
         db.session.add(post)
         db.session.commit()
@@ -309,12 +309,83 @@ def admin_panel():
     
     return render_template("admin_panel.html",user=user,courses = courses,posts=posts)
 
-@app.route("/resume_upload")
+@app.route("/resume_upload", methods=['POST','GET'])
 @login_required
-def rseume_submit():
+def resume_submit():
+
+    if request.method == "POST" :
+
+        file = request.files['resume']
+        
+        # Check if the file is valid
+        if file.filename == '':
+            return 'No selected file', 400
+        
+        # Save the file
+        if file and file.filename.endswith('.pdf'):
+            filepath = os.path.join(DEFAULT_IMAGE_PATH_FOR_RESUME, file.filename)
+            file.save(filepath)
+            resume = Resume(intern_id = session['user_id'],body = filepath)
+
+            db.session.add(resume)
+            db.session.commit()
+
+            flash("رزومه شما با موفقیت آپلود شد")
+            return redirect(url_for('home'))
+        return 'File is not a PDF', 400
 
 
     return render_template("upload_resume.html")
+
+
+@app.route("/phone-submit")
+@login_required
+def phone_submit():
+
+    return render_template("phone_form.html")
+    
+
+
+@app.route("/create_course", methods=["GET", "POST"])
+@login_required  # Ensures only authorized users can access this route
+def create_course():
+    form = CourseForm()
+    if form.validate_on_submit():
+        user_id = session.get("user_id"),
+        name=form.name.data,
+        body=form.body.data,
+        image = form.image.data,
+        if image and image.filename != '':
+            if allowed_file(image.filename):  # Check if an image was uploaded
+                filename = secure_filename(image.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+            else:
+                flash(translations[session['language']]['not_supported_format']) 
+                return redirect(url_for('create_post'))
+        else:
+            image_path = DEFAULT_IMAGE_PATH_FOR_COURSE  # Use default image if no image was uploaded
+        
+        # Create a new Course instance with data from the form
+        new_course = Course(
+
+        user_id = user_id,
+        name=name,
+        body=body,
+        image=image_path,
+        )
+        
+        # Add and commit the new course to the database
+        db.session.add(new_course)
+        db.session.commit()
+        
+        flash("Course created successfully!", "success")
+        return redirect(url_for("courses"))  # Redirect to the course list page
+    
+    # Render the course creation form for GET requests or validation failures
+    return render_template("create_course.html", form=form)
+
+    
 
 
 @app.route("/corses")

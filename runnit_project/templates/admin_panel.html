@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+
+
+
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ادمین</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static' , filename = 'css/style2.css')}}">
+    <style>
+        header {
+            background-image: linear-gradient(270deg, #7728b8, #b95ff0e0 23.78%, #7728b8f2 49.83%, #b95ff0e0 72.74%, #7728b8);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>صفحه مدیریت</h1>
+    </header>
+
+    <div class="admin-panel">
+        <h1> </h1>
+
+        <h1>پنل مدیریت : {{user.firstname}} {{user.lastname}} </h1>
+
+        <ul>
+            
+        <div class="courses">
+            <h2>اطلاعات شخصی ادمین</h2>
+            <ul>
+                <li>نام و نامخانوادگی: {{user.firstname}} {{user.lastname}}</li>
+                <li>شماره تماس :{%if user.phone %}{{user.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید {% endif %}</li>
+                <li>ایمیل :{{user.email}} </li>
+            </ul>
+        </div>
+
+
+                <!--  نمایش ئوره های ایجاد شده -->
+                <div class="members">
+                    <h2>دوره ها</h2>
+                    <ul>{% if courses %}
+                        {% for course in  courses %}
+                        <li>{{course.name}}</li>{% endfor %}
+                    </ul>
+                    <a href="{{ url_for('create_course') }}"> ایجاد دوره جدید </a></li>           
+                </div>
+                {% else %}
+                هنوز دوره ای ایجاد نکرده اید :
+        
+                 <a href="{{ url_for('create_course') }}"> ایجاد دوره جدید </a></li>
+                </div> 
+                {% endif %}
+      
+
+        <!-- نمایش مطالب -->
+        <div class="courses">
+            <h2>مطالب</h2>
+            <ul>{% if posts %}
+                {% for post in posts %}  
+                <li><a href="{{url_for('post_detail',post_id = post.post_id)}}">{{post.title}}</a></li>
+                {% endfor %}
+            </ul>
+           ایجاد مطلب جدید: <a href="{{ url_for('create_post') }}"> create a new post</a></li>
+        </div>
+        {% else %}
+        هنوز مطلبی ایجاد نکرده اید :
+
+        <a href="{{ url_for('create_post') }}"> ایجاد مطلب جدید</a></li>
+    </div>  
+        {% endif %}
+
+        <!-- نمایش اعضای شرکت‌کننده‌ها -->
+        <div class="members">
+            <h2>اعضا</h2>
+            <ul>
+                <li>شرکت کننده 1</li>
+                <li>شرکت کننده 2</li>
+                <li>شرکت کننده 3</li>
+            </ul>
+        </div>
+        <!-- نمایش اطلاعات شرکت‌کننده‌ها -->
+        <div class="participant-info">
+            <h2>اطلاعات شرکت کننده</h2>
+            <div class="profile">
+                <h3>پروفایل شرکت کننده</h3>
+                <p>نام: شرکت کننده 1</p>
+                <p>ایمیل: example@example.com</p>
+                <p>تاریخ عضویت: 01/01/2021</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

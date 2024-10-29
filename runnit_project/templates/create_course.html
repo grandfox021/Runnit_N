@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Course</title>
+</head>
+<body>
+    <h1>Create a New Course</h1>
+    
+    <form method="POST" action="{{ url_for('create_course') }}">
+        {{ form.hidden_tag() }}
+        
+        <div>
+            <label for="name">{{ form.name.label }}</label>
+            {{ form.name(size=32) }}
+            {% if form.name.errors %}
+                <ul class="errors">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="description">{{ form.body.label }}</label>
+            {{ form.body(cols=40, rows=5) }}
+            {% if form.body.errors %}
+                <ul class="errors">
+                    {% for error in form.body.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="image">{{ form.image.label }}</label>
+            {{ form.image(cols=40, rows=5) }}
+            {% if form.body.errors %}
+                <ul class="errors">
+                    {% for error in form.body.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        
+        <button type="submit">Create Course</button>
+    </form>
+</body>
+</html>

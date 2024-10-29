@@ -7,7 +7,8 @@
 <div>
     <div>Title : {{post.title}}</div>
     <div> body : {{post.body}}</div>
-    <div> image : <img src="{{url_for('static' , filename='images/uploads/' + post.image)}}" alt=""></div>
+    <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" alt="Post Image">
+
     <div> <p>Author :{{post.user_id}}</p></div>
 </div>
 
