@@ -27,7 +27,7 @@
 
                                     <li><a href=""> ویرایش حساب کابری </a></li>
                                     <li><a href=""> تغییر رمز عبور </a></li>
-                                    <li><a href="{{url_for('phone_submit')}}"> ثبت شماره همراه</a></li>
+                                    <li><a href="{{url_for('enter_phone')}}"> ثبت شماره همراه</a></li>
                                     <li><a href="{{url_for('resume_submit')}}"> ارسال رزومه</a></li>
                                     <li><a href="{{url_for('logout')}}"> خروج از حساب کاربری </a></li>
                                 </ul>
@@ -45,7 +45,7 @@
                                     <li> <i class="zmdi zmdi-account"></i> نام و نام خانوادگی : {{intern.firstname}} {{intern.latname}} </li>
                                     <li> <i class="zmdi zmdi-email"></i> ایمیل : {{intern.email}}</li>
                                     <li> <i class="zmdi zmdi-calendar-check"></i> تاریخ عضویت : 01/01/1395 </li>
-                                    <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if intern.phone %}{{intern.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید {% endif %}</li>
+                                    <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if intern.phone %}{{intern.phone}}{% else %}شما هنوز شماره ای ثبت نکرده اید : <a href="{{url_for('enter_phone')}}"> ثبت </a>{% endif %}</li>
                                 </ul>
                             </div>
                         </div>  

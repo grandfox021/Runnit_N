@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Phone Number</title>
+</head>
+<body>
+    <h2>Verify Phone Number</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="flash {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <p>{{ form.verification_code.label }} {{ form.verification_code() }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+</html>
