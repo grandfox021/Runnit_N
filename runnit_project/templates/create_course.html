@@ -9,46 +9,40 @@
     <h1>Create a New Course</h1>
     
     <form method="POST" action="{{ url_for('create_course') }}">
-        {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}  <!-- For CSRF protection -->
         
         <div>
-            <label for="name">{{ form.name.label }}</label>
-            {{ form.name(size=32) }}
+            {{ form.name.label }}<br>
+            {{ form.name(size=50) }}
             {% if form.name.errors %}
-                <ul class="errors">
-                    {% for error in form.name.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-        
-        <div>
-            <label for="description">{{ form.body.label }}</label>
-            {{ form.body(cols=40, rows=5) }}
-            {% if form.body.errors %}
-                <ul class="errors">
-                    {% for error in form.body.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
+                <ul>
+                {% for error in form.name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
                 </ul>
             {% endif %}
         </div>
 
         <div>
-            <label for="image">{{ form.image.label }}</label>
-            {{ form.image(cols=40, rows=5) }}
+            {{ form.body.label }}<br>
+            {{ form.body(cols=60, rows=10) }}
             {% if form.body.errors %}
-                <ul class="errors">
-                    {% for error in form.body.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
+                <ul>
+                {% for error in form.body.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
                 </ul>
             {% endif %}
         </div>
-        
-        
-        <button type="submit">Create Course</button>
+
+        <div>
+            {{ form.image.label }}<br>
+            {{ form.image() }}
+        </div>
+
+        <div>
+            <button type="submit">Submit Post</button>
+        </div>
     </form>
 </body>
 </html>

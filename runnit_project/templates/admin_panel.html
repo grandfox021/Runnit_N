@@ -39,7 +39,7 @@
             <h2>اطلاعات شخصی ادمین</h2>
             <ul>
                 <li>نام و نامخانوادگی: {{user.firstname}} {{user.lastname}}</li>
-                <li>شماره تماس :{%if user.phone %}{{user.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید {% endif %}</li>
+                <li>شماره تماس :{%if user.phone %}{{user.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید  :<a href="{{url_for('enter_phone')}}"> ثبت</a>{% endif %}</li>
                 <li>ایمیل :{{user.email}} </li>
             </ul>
         </div>

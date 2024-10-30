@@ -7,11 +7,11 @@
 <main id="home-page">
     <div class="container">
             <div class="row">
-            {% for course in context['courses'] %}
+            {% for course in courses %}
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 term-col" >
                     <article class="rounded-">
-                        <a href="{{url_for('detail_post_demo')}}" class="img-layer"><img src="/../../static/images/pic/1.jpg"></a>
-                        <h2><a href=""> آموزش برنامه نویسی  </a></h2>
+                        <a href="{{url_for('course_detail',course_id=course.course_id)}}" class="img-layer"><img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}"></a>
+                        <h2><a href=""> {{course.name}} </a></h2>
                         <span> رایگان </span>
                         <i>1:52:32</i>
                     </article>

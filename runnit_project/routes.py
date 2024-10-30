@@ -45,11 +45,10 @@ def home() :
 
 @app.route("/courses", methods=['GET'])
 def courses() :
-    
-    context = {
-        'courses': [1,2,3,4]
-    }
-    return render_template("course_list.html", context=context)
+
+    courses = Course.query.all()
+
+    return render_template("course_list.html", courses=courses)
 
 
 
@@ -357,32 +356,37 @@ def success():
 
 
 @app.route("/create_course", methods=["GET", "POST"])
-@login_required  # Ensures only authorized users can access this route
+@login_required
 def create_course():
     form = CourseForm()
     if form.validate_on_submit():
-        user_id = session.get("user_id"),
-        name=form.name.data,
-        body=form.body.data,
-        image = form.image.data,
-        if image and image.filename != '':
-            if allowed_file(image.filename):  # Check if an image was uploaded
+        user_id = session.get("user_id")
+        name = form.name.data
+        body = form.body.data
+        image = form.image.data
+
+        # Debugging statements to identify the type of 'image'
+        print("Image data type:", type(image))
+        print("Image data:", image)
+
+        # Check if 'image' is an actual file
+        if image and hasattr(image, 'filename') and image.filename != '':
+            if allowed_file(image.filename):  # Check if image has an allowed format
                 filename = secure_filename(image.filename)
                 image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
             else:
-                flash(translations[session['language']]['not_supported_format']) 
-                return redirect(url_for('create_post'))
+                flash(translations[session['language']]['not_supported_format'])
+                return redirect(url_for('create_course'))
         else:
             image_path = DEFAULT_IMAGE_PATH_FOR_COURSE  # Use default image if no image was uploaded
-        
+
         # Create a new Course instance with data from the form
         new_course = Course(
-
-        user_id = user_id,
-        name=name,
-        body=body,
-        image=image_path,
+            user_id=user_id,
+            name=name,
+            body=body,
+            image=image_path
         )
         
         # Add and commit the new course to the database
@@ -390,18 +394,12 @@ def create_course():
         db.session.commit()
         
         flash("Course created successfully!", "success")
-        return redirect(url_for("courses"))  # Redirect to the course list page
+        return redirect(url_for("courses"))
     
-    # Render the course creation form for GET requests or validation failures
     return render_template("create_course.html", form=form)
 
-    
 
 
-@app.route("/corses")
-def course() :
-
-    return render_template("archive.html")
 
 @app.route("/post/<int:post_id>",methods = ["POST","GET"])
 def post_detail(post_id):
@@ -453,3 +451,11 @@ def all_posts():
 def recent_users_comments():
 
     return render_template("comment.html")
+
+
+
+@app.route("/course-detail/<int:course_id>")
+def course_detail(course_id):
+
+    course = Course.query.filter_by(course_id = course_id).first()
+    return render_template("course_detail.html",course = course)

@@ -52,7 +52,7 @@ class User(db.Model):
     comments = db.relationship('Comment', backref='user', lazy=True)
     ratings = db.relationship('Rating', backref='user', lazy=True)
     resumes = db.relationship('Resume', backref='intern', lazy=True)
-
+    course = db.relationship('Course', backref='user', lazy=True)
 
     def verify_phone_number(self):
         pass

@@ -1,29 +1,19 @@
 {% extends './shared/base.html' %}
-
-
 {% block content %}
-<div class="container">
-    <nav aria-label="breadcrumb">
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#"> رانیت </a></li>
-        <li class="breadcrumb-item active"><a href="#"> دوره ها </a></li>
-        <li class="breadcrumb-item active" aria-current="page"> </li>
-      </ul>
-    </nav>
-</div>
-
+<br>
 <div class="container">
     <section class="term-content">
-        <header><h1> دوره آموزشی برنامه نویسی</h1></header>
+        <header><h1> {{course.name}}</h1></header>
         <div class="row">
-
+          
             <div class="col-md-8 col-sm-12 col-xs-12 pull-left">
                 <section class="term-description">
-                    <img src="i./../../static/images/big-thumb.jpg">
+                    <img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" alt="Post Image">
 
-                    <h2> برنامه نویسی  برای چه کاری مفید است ؟ </h2>
+                    <div> <p>منتشر کننده :{{course.user.firstname}} {{course.user.lastname}}</p></div>
+                    <h2> {{course.name}}</h2>
                     <p>
-                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                        {{course.body}}
                     </p>
 
                     <h2> سرفصل های این دوره : </h2>
