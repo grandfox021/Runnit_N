@@ -1,16 +1,61 @@
+<!-- Latest post Section -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<!-- Latest post Section -->
+
+<!-- Latest post Section -->
+<section class="tm-latest-post">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="tm-section-title mb-4">{{ translations['latest_posts'] }}</h2>
+            </div>
+        </div>
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-img-container">
+                            <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" 
+                                 class="card-img-top" 
+                                 alt="post image">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text text-muted">
+                                {{ translations['sent_by'] }} <strong>{{ post.user.firstname }} {{ post.user.lastname }}</strong>
+                            </p>
+                            <p class="card-text limited-text">{{ post.body }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Additional CSS for Image and Text Styling -->
+<style>
+    .card-img-container {
+        height: 200px; /* Set a fixed height for uniformity */
+        overflow: hidden;
+    }
+    .card-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures images fill the container while maintaining aspect ratio */
+    }
+    .limited-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Limits to 3 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adds ellipsis (…) after truncated text */
+        max-height: 4.5em; /* Controls height to ensure text limit */
+    }
+</style>
 
 
 
-<h1>all posts :</h2>
-    {% for post in posts %}
-        
-<div>
-    <div>Title : {{post.title}}</div>
-    <div> body : {{post.body}}</div>
-    <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" alt="Post Image">
-
-    <div> <p>Author :{{post.user_id}}</p></div>
-</div>
-
-    {% endfor %}
-        
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

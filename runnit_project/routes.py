@@ -403,27 +403,28 @@ def course() :
 
     return render_template("archive.html")
 
-@app.route("/post/<int:post_id>")
+@app.route("/post/<int:post_id>",methods = ["POST","GET"])
 def post_detail(post_id):
     post = Post.query.filter_by(post_id=post_id).first()
 
+    if "user_id" in session:
+        user= User.query.get_or_404(session['user_id'])
+        user_id = session.get("user_id")
+
+    else:
+        user=""
+
     if request.method == "POST" and "comment_submit" in request.form:
-        if "user_id" in session:
-            user= User.query.get_or_404(session['user_id'])
-            user_id = session.get("user_id")
-            user
-        else:
-            user=""
 
         comment = request.form['comment']
-        new_comment = Comment(content = comment , post_id = post_id , user_id =user_id )
+        new_comment = Comment(body = comment , post_id = post_id , commenter_id =user_id )
         db.session.add(new_comment)
         db.session.commit()
-        return redirect(url_for('detail_post',post_id = post_id))
+        return redirect(url_for('post_detail',post_id = post_id))
 
 
     comments = Comment.query.filter_by(post_id = post_id)
-    return render_template("post_detail.html", user=session['username'], user_id = session['user_id'], post=post,comments = comments,
+    return render_template("post_detail.html" , post=post,comments = comments,
                            translations=translations[session["language"]])
 
 @login_required
@@ -445,7 +446,7 @@ def all_posts():
 
     posts = Post.query.all()
 
-    return render_template("all_posts.html", posts = posts)
+    return render_template("all_posts.html", posts = posts,translations=translations[session["language"]], lang=session["language"])
 
 
 @app.route("/recent_users_comments")

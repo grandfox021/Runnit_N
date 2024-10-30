@@ -20,7 +20,7 @@
     <div id="comments-list">
         {% for comment in comments %}
             <div class="comment">
-                <p><strong>{{ comment.user.username }}:</strong> {{ comment.content }}</p>
+                <p style="color: black;"><strong>{{ comment.user.firstname }} {{ comment.user.lastname }}:</strong> {{ comment.body }}</p>
             </div>
         {% endfor %}
     </div>
