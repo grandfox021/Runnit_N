@@ -7,7 +7,7 @@ from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
 from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_IMAGE_PATH_FOR_RESUME
-from .models import User,Post,Superuser,Admin,Course,Resume
+from .models import User,Post,Superuser,Admin,Course,Resume,Comment
 from werkzeug.utils import secure_filename
 from twilio.rest import Client
 import random
@@ -407,7 +407,24 @@ def course() :
 def post_detail(post_id):
     post = Post.query.filter_by(post_id=post_id).first()
 
-    return render_template("post_detail.html",post=post)
+    if request.method == "POST" and "comment_submit" in request.form:
+        if "user_id" in session:
+            user= User.query.get_or_404(session['user_id'])
+            user_id = session.get("user_id")
+            user
+        else:
+            user=""
+
+        comment = request.form['comment']
+        new_comment = Comment(content = comment , post_id = post_id , user_id =user_id )
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(url_for('detail_post',post_id = post_id))
+
+
+    comments = Comment.query.filter_by(post_id = post_id)
+    return render_template("post_detail.html", user=session['username'], user_id = session['user_id'], post=post,comments = comments,
+                           translations=translations[session["language"]])
 
 @login_required
 @app.route('/user/account')
