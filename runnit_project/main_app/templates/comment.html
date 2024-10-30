@@ -1,0 +1,120 @@
+{% extends './shared/base.html' %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظرات کاربران</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+        }
+
+        .comment {
+            background-image: linear-gradient(270deg, #64B5F6, #BBDEFB 23.78%, #64B5F6 49.83%, #BBDEFB 72.74%, #64B5F6);            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 80px ;
+        }
+
+        .comment1 {
+            background-image: linear-gradient(270deg, #FF7043, #FFCC80 23.78%, #FF7043 49.83%, #FFCC80 72.74%, #FF7043);            border-radius: 5px;
+            padding: 10px;
+            margin: 80px;
+        }
+
+        .comment2 {
+            background-image: linear-gradient(270deg, #F06292, #f48fb1e8 23.78%, #F06292 49.83%, #f48fb1f5 72.74%, #F06292);            border-radius: 5px;
+            padding: 10px;
+            margin: 80px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-info {
+            font-size: 14px;
+        }
+
+        .resume {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .comment-text {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="comment">
+        <div class="profile">
+            <img src="profile-image.jpg" alt="عکس پروفایل">
+            <div class="profile-info">
+                <p>نام کاربر: محمد</p>
+                <p>ایمیل: example@example.com</p>
+            </div>
+        </div>
+        <div class="resume">
+            <p>سابقه کاری: برنامه نویس وب با بیش از 5 سال تجربه</p>
+        </div>
+        <div class="comment-text">
+            <p>خواستم بگم بنده به عنوان کسی که تا حالا توی یک جمع به صورت حضوری برنامه نویسی رو یاد نگرفته واقعا تجربه جالبی داشتم و از روند کلاس و چالش های ایجاد شده خیلی راضی بودم
+                خواستم اگر میشه در آینده جلسات
+                مخصوصا این جلسات اولیه مفاهيم به صورت سوال محور آموزش داده بشه
+                اگر هم بشه استاد بفرمایند ما در ساعات غیر از کلاس از چه منابعی مطالعه کنیم و برای تقویت بیشتر خودمون چه کارهایی لازمه
+                البته سوای تکالیف و تسک هایی که قرار میدن</p>
+        </div>
+    </div>
+    <div class="comment1">
+        <div class="profile">
+            <img src="profile-image.jpg" alt="عکس پروفایل">
+            <div class="profile-info">
+                <p>نام کاربر: محمد</p>
+                <p>ایمیل: example@example.com</p>
+            </div>
+        </div>
+        <div class="resume">
+            <p>سابقه کاری: برنامه نویس وب با بیش از 5 سال تجربه</p>
+        </div>
+        <div class="comment-text">
+            <p>جلسه دیروز خیلی خوب بود و از نظر من چند جلسه با کاغذ کار کنم و درک بهتری از الگوریتم پیدا کنیم بهتره تا اینکه سریعاً بخواهیم بریم کد زدن با کامپیوتر، چون اکثرا با کامپیوتر کد نویسی کردیم.</p>
+        </div>
+    </div>
+    <div class="comment2">
+        <div class="profile">
+            <img src="profile-image.jpg" alt="عکس پروفایل">
+            <div class="profile-info">
+                <p>نام کاربر: محمد</p>
+                <p>ایمیل: example@example.com</p>
+            </div>
+        </div>
+        <div class="resume">
+            <p>سابقه کاری: برنامه نویس وب با بیش از 5 سال تجربه</p>
+        </div>
+        <div class="comment-text">
+            <p>کلاس دیروز عالی بود ،
+                من این رویکرد چالشی و حل‌ مسئله استاد رو برای جلسه اول دوس داشتم و اینکه تاکید به مشارکت همه داشتن و این خب تا یه حدی آدمو مجبور به مشارکت میکرد ولی علاقه دارم که بیشتر و بیشتر تجربه ها و نکته هایی که از نظرشون مهم هست رو با ما به اشتراک بذارن</p>
+        </div>
+    </div>
+</body>
+
+
+{% endblock %}
+
+
