@@ -3,7 +3,7 @@ from .translations import translations
 from flask_mailman import Mail,EmailMessage  # type: ignore
 from .decorators import admin_required,login_required
 import os
-from .forms import PostForm,CourseForm
+from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
 from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_IMAGE_PATH_FOR_RESUME
@@ -203,32 +203,6 @@ def reset_with_token(token):
 
 
 
-@login_required
-@app.route('/send_verification', methods=['POST'])
-def send_verification():
-
-    user =User.query.filter_by(user_id = session.get("user_id")) 
-    phone_number = request.form.get('phone_number')
-    verification_code = random.randint(100000, 999999)
-    session['verification_code'] = verification_code
-
-    # Send SMS
-    message = client.messages.create(
-        body=f'Your verification code is: {verification_code}',
-        from_=TWILIO_PHONE_NUMBER,
-        to=phone_number
-    )
-    return "Verification code sent!"
-
-
-@app.route('/verify_code', methods=['POST'])
-def verify_code():
-    user_code = request.form.get('code')
-    if 'verification_code' in session and session['verification_code'] == int(user_code):
-        return "Phone number verified successfully!"
-    else:
-        return "Verification failed!", 400
-
 
 # Define superuser details here
 
@@ -338,12 +312,48 @@ def resume_submit():
     return render_template("upload_resume.html")
 
 
-@app.route("/phone-submit")
-@login_required
-def phone_submit():
 
-    return render_template("phone_form.html")
-    
+@login_required
+@app.route('/enter_phone', methods=['GET', 'POST'])
+def enter_phone():
+    form = PhoneNumberForm()
+    if form.validate_on_submit():
+        phone_number = form.phone.data
+        verification_code = str(random.randint(100000, 999999))  # Generate 6-digit code
+        session['verification_code'] = verification_code
+        session['phone_number'] = phone_number
+
+        # Send SMS
+        message = client.messages.create(
+            body=f"Your verification code is {verification_code}",
+            from_=TWILIO_PHONE_NUMBER,
+            to=phone_number
+        )
+        flash(f'Code sent to {phone_number}', 'info')
+        return redirect(url_for('verify_phone'))
+    return render_template('enter_phone.html', form=form)
+
+
+@app.route('/verify_phone', methods=['GET', 'POST'])
+def verify_phone():
+    form = VerificationForm()
+    if form.validate_on_submit():
+        entered_code = form.verification_code.data
+        if entered_code == session.get('verification_code'):
+            flash('Phone number verified successfully!', 'success')
+            user = User.query.filter_by(user_id = session.get('user_id'))
+            phone_number = session.get('phone_number')
+            user.phone_number = phone_number
+            db.session.commit()
+            return redirect(url_for('success'))
+        else:
+            flash('Incorrect verification code. Please try again.', 'danger')
+    return render_template('verify_phone.html', form=form)
+
+@app.route('/success')
+def success():
+    return "Phone number verified successfully!"
+
 
 
 @app.route("/create_course", methods=["GET", "POST"])
