@@ -1,6 +1,6 @@
 from . import db
 from werkzeug.security import generate_password_hash,check_password_hash   # type: ignore
-
+from datetime import datetime
 
 # User table with one-to-many relationship with Post and Comment
 # User Model
@@ -11,15 +11,19 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     phone_number = db.Column(db.String(15), nullable=True)
     profile_pic = db.Column(db.String(200))
+    # resume_id = db.Column(db.Integer, db.ForeignKey('resume.resume_id'), nullable=True)
     _password = db.Column(db.String(250), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_superuser = db.Column(db.Boolean, default=False)
     is_authenticated = db.Column(db.Boolean, default=False)
+
+
     # Relationships
     posts = db.relationship('Post', backref='user', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
     ratings = db.relationship('Rating', backref='user', lazy=True)
-    resumes = db.relationship('Resume', backref='intern', lazy=True)
+    resumes = db.relationship('Resume', backref='user', lazy=True)
+    course = db.relationship('Course', backref='user', lazy=True)
     # Discriminator column (to distinguish child classes)
     type = db.Column(db.String(50))
 
@@ -47,12 +51,7 @@ class User(db.Model):
         return check_password_hash(self._password, password)
 
 
-    # Relationships
-    posts = db.relationship('Post', backref='user', lazy=True)
-    comments = db.relationship('Comment', backref='user', lazy=True)
-    ratings = db.relationship('Rating', backref='user', lazy=True)
-    resumes = db.relationship('Resume', backref='intern', lazy=True)
-    course = db.relationship('Course', backref='user', lazy=True)
+
 
     def verify_phone_number(self):
         pass
@@ -104,6 +103,17 @@ class Admin(User):
     def calculate_average_rating_submitted(self):
         pass
 
+
+class Participant(db.Model):
+    __tablename__ = 'participants'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'), nullable=False)
+    date_joined = db.Column(db.DateTime, default=datetime.now())
+
+    # Relationships to access participant information
+    user = db.relationship("User", backref="enrollments")
+    course = db.relationship("Course", backref="participants")
 # Post Model
 class Post(db.Model):
     post_id = db.Column(db.Integer, primary_key=True)
@@ -154,7 +164,7 @@ class Intern(User):
 # Resume Model
 class Resume(db.Model):
     resume_id = db.Column(db.Integer, primary_key=True)
-    intern_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     body = db.Column(db.Text, nullable=False)
     profile_image = db.Column(db.String(200))
     skill = db.Column(db.String(200))
@@ -184,12 +194,18 @@ class Course(db.Model):
     rating = db.Column(db.Integer)
     image = db.Column(db.String(200))
 
+    # Defined a property to count participants
+    @property
+    def participant_count(self):
+        return len(self.participants)
+    
     def change_coursename(self, new_name):
         self.name = new_name
         db.session.commit()
 
     def calculate_average_ratings_submitted(self):
         pass
+
 
 # Exam Model
 class Exam(db.Model):

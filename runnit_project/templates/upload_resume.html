@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>آپلود رزومه </title>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="custom-alert">
+        <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+{% endwith %}
+
+
     <style>
         body {
             font-family: Arial, sans-serif;

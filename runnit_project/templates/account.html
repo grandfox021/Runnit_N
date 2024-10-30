@@ -12,10 +12,10 @@
                         <div class="avatar-layer">
                             <div class="img-layer">
                                 <a href="" class="change-image"><i class="zmdi zmdi-edit"></i></a>
-                                <img src="{{ url_for('static', filename=intern.profile_pic.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}"">
+                                <img src="{{ url_for('static', filename=user.profile_pic.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}"">
                             </div>
                             <div class="detail">
-                                <span>  {{intern.firstname}}</span>
+                                <span>  {{user.firstname}}</span>
                                 <span> عضویت : 01/01/1403 </span>
                             </div>
                         </div>
@@ -42,10 +42,10 @@
                             <div class="account-information">
                                 <h3> اطلاعات کاربری </h3>
                                 <ul>
-                                    <li> <i class="zmdi zmdi-account"></i> نام و نام خانوادگی : {{intern.firstname}} {{intern.latname}} </li>
-                                    <li> <i class="zmdi zmdi-email"></i> ایمیل : {{intern.email}}</li>
+                                    <li> <i class="zmdi zmdi-account"></i> نام و نام خانوادگی : {{user.firstname}} {{user.latname}} </li>
+                                    <li> <i class="zmdi zmdi-email"></i> ایمیل : {{user.email}}</li>
                                     <li> <i class="zmdi zmdi-calendar-check"></i> تاریخ عضویت : 01/01/1395 </li>
-                                    <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if intern.phone %}{{intern.phone}}{% else %}شما هنوز شماره ای ثبت نکرده اید : <a href="{{url_for('enter_phone')}}"> ثبت </a>{% endif %}</li>
+                                    <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if user.phone %}{{user.phone}}{% else %}شما هنوز شماره ای ثبت نکرده اید : <a href="{{url_for('enter_phone')}}"> ثبت </a>{% endif %}</li>
                                 </ul>
                             </div>
                         </div>  

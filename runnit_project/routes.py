@@ -7,11 +7,10 @@ from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
 from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_IMAGE_PATH_FOR_RESUME
-from .models import User,Post,Superuser,Admin,Course,Resume,Comment
+from .models import User,Post,Superuser,Admin,Course,Resume,Comment,Participant
 from werkzeug.utils import secure_filename
 from twilio.rest import Client
 import random
-
 
 s = URLSafeTimedSerializer(app.secret_key)
 mail = Mail(app)
@@ -260,15 +259,6 @@ def create_post():
     return render_template('create_post.html', form=form)
 
 
-# @admin_required
-# @login_required
-
-@login_required
-@app.route("/signup_for_course")
-def sign_up_for_course():
-    pass
-    
-    
 @app.route("/admin")
 @admin_required    
 @login_required
@@ -298,7 +288,7 @@ def resume_submit():
         if file and file.filename.endswith('.pdf'):
             filepath = os.path.join(DEFAULT_IMAGE_PATH_FOR_RESUME, file.filename)
             file.save(filepath)
-            resume = Resume(intern_id = session['user_id'],body = filepath)
+            resume = Resume(user_id = session['user_id'],body = filepath)
 
             db.session.add(resume)
             db.session.commit()
@@ -363,14 +353,14 @@ def create_course():
         user_id = session.get("user_id")
         name = form.name.data
         body = form.body.data
-        image = form.image.data
+        image = request.files['image']
 
         # Debugging statements to identify the type of 'image'
         print("Image data type:", type(image))
         print("Image data:", image)
 
         # Check if 'image' is an actual file
-        if image and hasattr(image, 'filename') and image.filename != '':
+        if image and image.filename != '':
             if allowed_file(image.filename):  # Check if image has an allowed format
                 filename = secure_filename(image.filename)
                 image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -430,9 +420,9 @@ def post_detail(post_id):
 def user_account():
 
     user_id= session['user_id']
-    intern = User.query.filter_by(user_id = user_id).first()
+    user = User.query.filter_by(user_id = user_id).first()
     
-    return render_template("account.html",intern = intern)
+    return render_template("account.html",user = user)
 
 @app.route("/detail_demo")
 def detail_post_demo() :
@@ -459,3 +449,34 @@ def course_detail(course_id):
 
     course = Course.query.filter_by(course_id = course_id).first()
     return render_template("course_detail.html",course = course)
+
+
+
+
+@app.route("/enroll_course/<int:course_id>", methods=["POST","GET"])
+@login_required
+def enroll_course(course_id):
+    # Check if the course exists
+    course = Course.query.get_or_404(course_id)
+    user_id = session.get("user_id")
+    user = User.query.filter_by(user_id =user_id)
+    # Check if the user is already enrolled
+    existing_participant = Participant.query.filter_by(user_id=session.get("user_id"), course_id=course_id).first()
+    if existing_participant:
+        flash("You are already enrolled in this course.", "info")
+        return redirect(url_for("course_detail", course_id=course_id))
+
+    resume = Resume.query.filter_by(user_id = user_id)
+    if resume is not None :
+        pass
+    else :
+        flash("first you need to upload a resume in your profile")
+        return redirect(url_for('resume_submit'))
+    # Enroll the user as a participant
+    participant = Participant(user_id=session.get("user_id"), course_id=course_id)
+    db.session.add(participant)
+    db.session.commit()
+
+    flash("Successfully enrolled in the course!", "success")
+    return redirect(url_for("course_detail", course_id=course_id))
+    

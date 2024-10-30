@@ -1,6 +1,19 @@
 {% extends './shared/base.html' %}
 {% block content %}
 <br>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="custom-alert">
+    <ul class="flashes">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    </div>
+{% endif %}
+{% endwith %}
+
+<br>
 <div class="container">
     <section class="term-content">
         <header><h1> {{course.name}}</h1></header>
@@ -155,9 +168,13 @@
                             <i> 42 نفر </i>
                         </li>
                     </ul>
+                    
+                    <form action="{{ url_for('enroll_course', course_id=course.course_id) }}" method="post">
+                        <a><button class="btn btn-success" type="submit"> شرکت در دوره </button></a>
+                    
 
-                    <a href=""> شرکت در دوره : رایگان </a>
-                </div>
+                </form>
+             <br>
 
                 <article class="teacher-info">
                     <img src="./../static/images/vali.jpg">
