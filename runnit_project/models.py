@@ -125,8 +125,6 @@ class Comment(db.Model):
     body = db.Column(db.Text(500), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'), nullable=False)
 
-    user = db.relationship('User', backref=db.backref('user_comment', lazy=True))  # Relationship to User model
-
     def __repr__(self):
         return f'<Comment {self.body[:20]}>'
 
