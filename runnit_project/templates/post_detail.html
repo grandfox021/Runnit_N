@@ -1,17 +1,17 @@
 
 
 
-<h1>detail of POST : </h1>
+<h1> جزییات پست  : </h1>
 
 
 
-<div>Title : {{post.title}}</div>
-<div> body : {{post.body}}</div>
+<div>موضوع : {{post.title}}</div>
+<div> پست : {{post.body}}</div>
 <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" alt="Post Image">
 
 
 
-<div> <p>Author :{{post.user_id}}</p></div>
+<div> <p>منتشر کننده :{{post.user_id}}</p></div>
 
 
 
