@@ -429,3 +429,9 @@ def all_posts():
     posts = Post.query.all()
 
     return render_template("all_posts.html", posts = posts)
+
+
+@app.route("/recent_users_comments")
+def recent_users_comments():
+
+    return render_template("comment.html")
