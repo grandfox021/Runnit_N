@@ -3,7 +3,7 @@ from wtforms import StringField, TextAreaField, FileField
 from wtforms.validators import DataRequired
 from wtforms import SubmitField
 from wtforms.validators import DataRequired, Regexp
-
+from flask_wtf.file import FileAllowed
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
@@ -17,7 +17,9 @@ class CourseForm(FlaskForm):
     body = TextAreaField('Body', validators=[DataRequired()])
     image = FileField('Image')
 
-
+class ResumeUploadForm(FlaskForm):
+    resume = FileField("Upload Resume", validators=[FileAllowed(['pdf', 'doc', 'docx'], "Only document files are allowed!")])
+    submit = SubmitField("Upload")
 
 class PhoneNumberForm(FlaskForm):
     phone = StringField('Phone Number', validators=[
@@ -30,3 +32,5 @@ class PhoneNumberForm(FlaskForm):
 class VerificationForm(FlaskForm):
     verification_code = StringField('Verification Code', validators=[DataRequired()])
     submit = SubmitField('Verify')
+
+

@@ -3,10 +3,10 @@ from .translations import translations
 from flask_mailman import Mail,EmailMessage  # type: ignore
 from .decorators import admin_required,login_required
 import os
-from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm
+from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm,ResumeUploadForm
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
-from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_IMAGE_PATH_FOR_RESUME
+from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_PATH_FOR_RESUME
 from .models import User,Post,Superuser,Admin,Course,Resume,Comment,Participant
 from werkzeug.utils import secure_filename
 from twilio.rest import Client
@@ -158,6 +158,41 @@ def send_reset_email(to_email, reset_link):
     return "message sent successfully check your inbox"
 
 
+def send_course_declined_email(to_email):
+
+    title = "وضعیت درخواست شما برای شرکت در در دوره"
+    body = F"hello this is a message from support to reset your pass please follow the link :"
+    sender_email = "hbsmtp635@gmail.com"
+    reciever_email = [to_email]
+    msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)
+    msg.send()
+    return "message sent successfully check your inbox"
+
+    
+
+def send_course_approved_email(to_email):
+
+
+    title = "وضعیت درخواست شما برای شرکت در در دوره"
+    body = F"hello this is a message from support to reset your pass please follow the link :"
+    sender_email = "hbsmtp635@gmail.com"
+    reciever_email = [to_email]
+    msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)
+    msg.send()
+    return "message sent successfully check your inbox"
+
+
+def send_course_waiting_email(to_email):
+    
+
+    title = "وضعیت درخواست شما برای شرکت در در دوره"
+    body = F"hello this is a message from support to reset your pass please follow the link :"
+    sender_email = "hbsmtp635@gmail.com"
+    reciever_email = [to_email]
+    msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)
+    msg.send()
+    return "message sent successfully check your inbox"
+
 
 
 # Password reset request route
@@ -271,34 +306,6 @@ def admin_panel():
     posts = Post.query.filter_by(user_id = user_id)
     
     return render_template("admin_panel.html",user=user,courses = courses,posts=posts)
-
-@app.route("/resume_upload", methods=['POST','GET'])
-@login_required
-def resume_submit():
-
-    if request.method == "POST" :
-
-        file = request.files['resume']
-        
-        # Check if the file is valid
-        if file.filename == '':
-            return 'No selected file', 400
-        
-        # Save the file
-        if file and file.filename.endswith('.pdf'):
-            filepath = os.path.join(DEFAULT_IMAGE_PATH_FOR_RESUME, file.filename)
-            file.save(filepath)
-            resume = Resume(user_id = session['user_id'],body = filepath)
-
-            db.session.add(resume)
-            db.session.commit()
-
-            flash("رزومه شما با موفقیت آپلود شد")
-            return redirect(url_for('home'))
-        return 'File is not a PDF', 400
-
-
-    return render_template("upload_resume.html")
 
 
 
@@ -459,7 +466,22 @@ def enroll_course(course_id):
     # Check if the course exists
     course = Course.query.get_or_404(course_id)
     user_id = session.get("user_id")
-    user = User.query.filter_by(user_id =user_id)
+    user = User.query.get(user_id)  
+
+    if not user.resume:
+        flash("You must upload a resume to enroll in this course.")
+        return redirect(url_for("upload_resume"))
+    elif not user.resume.approved:
+        flash("Your resume is pending approval. Please wait for the admin to review.")
+        return redirect(url_for("profile"))
+
+    # # If resume is approved, proceed with enrollment
+    # course.users.append(user)  # Assuming a relationship between users and courses
+    # db.session.commit()
+    # flash("You have successfully enrolled in the course!")
+    # return redirect(url_for("course_detail", course_id=course.id))
+
+
     # Check if the user is already enrolled
     existing_participant = Participant.query.filter_by(user_id=session.get("user_id"), course_id=course_id).first()
     if existing_participant:
@@ -479,4 +501,85 @@ def enroll_course(course_id):
 
     flash("Successfully enrolled in the course!", "success")
     return redirect(url_for("course_detail", course_id=course_id))
-    
+
+
+# @app.route("/resume_upload", methods=['POST','GET'])
+# @login_required
+# def resume_submit():
+
+#     if request.method == "POST" :
+
+#         file = request.files['resume']
+        
+#         # Check if the file is valid
+#         if file.filename == '':
+#             return 'No selected file', 400
+        
+#         # Save the file
+#         if file and file.filename.endswith('.pdf'):
+#             filepath = os.path.join(DEFAULT_IMAGE_PATH_FOR_RESUME, file.filename)
+#             file.save(filepath)
+#             resume = Resume(user_id = session['user_id'],body = filepath)
+
+#             db.session.add(resume)
+#             db.session.commit()
+
+#             flash("رزومه شما با موفقیت آپلود شد")
+#             return redirect(url_for('home'))
+#         return 'File is not a PDF', 400
+
+
+#     return render_template("upload_resume.html")
+
+
+@app.route("/upload_resume", methods=["GET", "POST"])
+@login_required
+def upload_resume():
+    form = ResumeUploadForm()
+    if form.validate_on_submit():
+        resume_file = form.resume.data
+        if resume_file == '':
+            flash("no file selected")
+            return redirect(url_for('upload_resume'))
+        filename = secure_filename(resume_file.filename)
+        resume_path = os.path.join(DEFAULT_PATH_FOR_RESUME, filename)  # Specify your upload folder path
+        resume_file.save(resume_path)
+
+        # Check if a resume already exists and update it, or create a new one
+        existing_resume = Resume.query.filter_by(user_id=session.get("user_id")).first()
+        if existing_resume:
+            existing_resume.file_path = filename
+            existing_resume.approved = False  # Reset approval status on new upload
+        else:
+            new_resume = Resume(file_path=filename, approved=False, user_id=session.get("user_id"))
+            db.session.add(new_resume)
+
+        db.session.commit()
+        flash("رزومه شما با موفقیت آپلود شد")
+        return redirect(url_for("user_account"))
+    return render_template("upload_resume.html", form=form)
+
+
+
+@app.route("/admin/review_resumes")
+def review_resumes():
+    pending_resumes = Resume.query.filter_by(approved=False).all()
+    return render_template("admin/review_resumes.html", pending_resumes=pending_resumes)
+
+@app.route("/admin/approve_resume/<int:resume_id>", methods=["POST"])
+def approve_resume(resume_id):
+    resume = Resume.query.get_or_404(resume_id)
+    resume.approved = True
+    db.session.commit()
+    flash("Resume approved successfully.")
+    return redirect(url_for("review_resumes"))
+
+@app.route("/admin/reject_resume/<int:resume_id>", methods=["POST"])
+def reject_resume(resume_id):
+    resume = Resume.query.get_or_404(resume_id)
+    db.session.delete(resume)  # Remove the resume if rejected
+    db.session.commit()
+    flash("Resume rejected and removed.")
+    return redirect(url_for("review_resumes"))
+
+

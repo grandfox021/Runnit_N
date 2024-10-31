@@ -12,7 +12,7 @@ DEFAULT_IMAGE_PATH_FOR_USER = "static/images/uploads/default_pic_for_user.png"
 DEFAULT_IMAGE_PATH_FOR_POST = "static/images/uploads/default_pic_for_post.png" 
 DEFAULT_IMAGE_PATH_FOR_COURSE = "static/images/uploads/default_pic_for_course.png" 
 
-DEFAULT_IMAGE_PATH_FOR_RESUME = "runnit_project/static/resume_uploads" 
+DEFAULT_PATH_FOR_RESUME = "runnit_project/static/resume_uploads" 
 
 UPLOAD_FOLDER = 'runnit_project/static/images/uploads'
 

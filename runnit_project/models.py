@@ -11,7 +11,8 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     phone_number = db.Column(db.String(15), nullable=True)
     profile_pic = db.Column(db.String(200))
-    # resume_id = db.Column(db.Integer, db.ForeignKey('resume.resume_id'), nullable=True)
+    resume = db.Column(db.String(150), nullable=True)  # Stores the resume file path
+    resume_approved = db.Column(db.Boolean, default=False)
     _password = db.Column(db.String(250), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_superuser = db.Column(db.Boolean, default=False)
@@ -22,7 +23,7 @@ class User(db.Model):
     posts = db.relationship('Post', backref='user', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
     ratings = db.relationship('Rating', backref='user', lazy=True)
-    resumes = db.relationship('Resume', backref='user', lazy=True)
+    resume = db.relationship("Resume", back_populates="user", uselist=False)  # uselist=False ensures one-to-one
     course = db.relationship('Course', backref='user', lazy=True)
     # Discriminator column (to distinguish child classes)
     type = db.Column(db.String(50))
@@ -165,10 +166,12 @@ class Intern(User):
 class Resume(db.Model):
     resume_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    body = db.Column(db.Text, nullable=False)
+    file_path = db.Column(db.String(150), nullable=False)  # Path to the resume file
+    approved = db.Column(db.Boolean, default=False)   
+    description = db.Column(db.Text, nullable=True)
     profile_image = db.Column(db.String(200))
     skill = db.Column(db.String(200))
-
+    user = db.relationship("User", back_populates="resume")
     def verify_format_pdf(self):
         pass
 

@@ -3,74 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آپلود رزومه </title>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div class="custom-alert">
-        <ul class="flashes">
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        </div>
-    {% endif %}
-{% endwith %}
-
-
+    <title>Upload Resume</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .upload-container {
-            background-color: white;
+        /* Container styling */
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f7f9fc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-
+        
         h2 {
-            margin-bottom: 20px;
+            color: #333;
             font-size: 24px;
+            margin-bottom: 20px;
         }
-
-        .file-input {
+        
+        /* Flash message styling */
+        .flash-messages {
+            color: #fff;
+            background-color: #28a745;
+            padding: 10px;
+            border-radius: 4px;
             margin-bottom: 15px;
         }
 
-        .submit-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
+        /* Form styling */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
         }
 
-        .submit-btn:hover {
-            background-color: #45a049;
+        .form-label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-control-file {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        
+        /* Submit button styling */
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Error message styling */
+        .error span {
+            color: #e74c3c;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+         <h2>آپلود رزومه شخصی</h2>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_resume') }}">
+            {{ form.hidden_tag() }}
 
-<div class="upload-container">
-    <h2>آپلود رزومه شخصی  </h2>
-    <form action="{{url_for('resume_submit')}}" method="POST" enctype="multipart/form-data">
-        <div class="file-input">
-            <label for="resume">فایل رزومه خود را انتخاب کنید  (PDF, DOCX):</label><br>
-            <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
-        </div>
-        <button type="submit" class="submit-btn">آپلود</button>
-    </form>
-</div>
+            <div class="form-group">
+                <label for="resume">فایل رزومه خود را انتخاب کنید  (PDF, DOCX):</label><br>
+                {{ form.resume.label(class="form-label") }}
+                {{ form.resume(class="form-control-file") }}
+                {% if form.resume.errors %}
+                    <div class="error">
+                        {% for error in form.resume.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
 
+            <div class="form-group">
+                {{ form.submit(class="btn-primary") }}
+            </div>
+        </form>
+    </div>
 </body>
 </html>
+
+
