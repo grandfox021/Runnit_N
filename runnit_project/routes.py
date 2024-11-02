@@ -304,6 +304,7 @@ def admin_panel():
     user = User.query.filter_by(user_id = user_id).first()
     courses = Course.query.filter_by(user_id = user_id)
     posts = Post.query.filter_by(user_id = user_id)
+
     
     return render_template("admin_panel.html",user=user,courses = courses,posts=posts)
 
@@ -472,8 +473,9 @@ def enroll_course(course_id):
         flash("You must upload a resume to enroll in this course.")
         return redirect(url_for("upload_resume"))
     elif not user.resume.approved:
+        user.resume_approved = 1
         flash("Your resume is pending approval. Please wait for the admin to review.")
-        return redirect(url_for("profile"))
+        return redirect(url_for("course_detail",course_id=course_id))
 
     # # If resume is approved, proceed with enrollment
     # course.users.append(user)  # Assuming a relationship between users and courses
@@ -538,7 +540,8 @@ def upload_resume():
     form = ResumeUploadForm()
     if form.validate_on_submit():
         resume_file = form.resume.data
-        if resume_file == '':
+        filename = secure_filename(resume_file.filename)
+        if filename == '':
             flash("no file selected")
             return redirect(url_for('upload_resume'))
         filename = secure_filename(resume_file.filename)
@@ -551,6 +554,8 @@ def upload_resume():
             existing_resume.file_path = filename
             existing_resume.approved = False  # Reset approval status on new upload
         else:
+            user = User.query.filter_by(user_id = session.get("user_id"))
+            user.resume = resume_path
             new_resume = Resume(file_path=filename, approved=False, user_id=session.get("user_id"))
             db.session.add(new_resume)
 
@@ -559,27 +564,58 @@ def upload_resume():
         return redirect(url_for("user_account"))
     return render_template("upload_resume.html", form=form)
 
+@app.route("/close-course/<int:course_id>")
+@admin_required
+@login_required
+def close_course(course_id):
+
+    course = Course.query.filter_by(course_id = course_id)
+    course.closed  = True
+    db.session.commit()
 
 
-@app.route("/admin/review_resumes")
-def review_resumes():
-    pending_resumes = Resume.query.filter_by(approved=False).all()
-    return render_template("admin/review_resumes.html", pending_resumes=pending_resumes)
+@app.route("/open-course/<int:course_id>")
+@admin_required
+@login_required
+def open_course(course_id):
+
+    course = Course.query.filter_by(course_id = course_id)
+    course.closed  = False
+    db.session.commit()
+
+
+@app.route('/course/<int:course_id>/resumes')
+def view_course_resumes(course_id):
+    # Get the course and associated resumes
+    course = Course.query.get_or_404(course_id)
+    resumes = Resume.query.filter_by(course_id=course_id,approved=False).all()  # Assuming course_id exists in Resume
+
+    return render_template('view_course_resumes.html', course=course, resumes=resumes)
+
+# @app.route("/admin/review_resumes")
+# def review_resumes():
+#     pending_resumes = Resume.query.filter_by(approved=False).all()
+#     return render_template("admin/review_resumes.html", pending_resumes=pending_resumes)
 
 @app.route("/admin/approve_resume/<int:resume_id>", methods=["POST"])
 def approve_resume(resume_id):
     resume = Resume.query.get_or_404(resume_id)
+    user = User.query.filter_by( user_id = resume.user_id)
+    user.resume_approved = "A"
     resume.approved = True
     db.session.commit()
+    send_course_approved_email(user.email)
     flash("Resume approved successfully.")
     return redirect(url_for("review_resumes"))
 
 @app.route("/admin/reject_resume/<int:resume_id>", methods=["POST"])
 def reject_resume(resume_id):
     resume = Resume.query.get_or_404(resume_id)
-    db.session.delete(resume)  # Remove the resume if rejected
-    db.session.commit()
+    user = User.query.filter_by( user_id = resume.user_id)
+    send_course_declined_email(user.email)
+    user.resume_approved = "D"
+    resume.approved = False
+    # db.session.delete(resume)  # Remove the resume if rejected
+    # db.session.commit()
     flash("Resume rejected and removed.")
     return redirect(url_for("review_resumes"))
-
-

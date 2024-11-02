@@ -2,18 +2,24 @@
 
 {% block content %}
 
+
+
 <main>
     <div class="container">
         <div class="user-account">
             <div class="row">
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <aside>
-
+                    <aside>           
+                    
                         <div class="avatar-layer">
                             <div class="img-layer">
                                 <a href="" class="change-image"><i class="zmdi zmdi-edit"></i></a>
                                 <img src="{{ url_for('static', filename=user.profile_pic.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}">
                             </div>
+
+                     
+                            
+
                             <div class="detail">
                                 <span>  {{user.firstname}}</span>
                                 <span> عضویت : 01/01/1403 </span>
@@ -28,7 +34,11 @@
                                     <li><a href=""> ویرایش حساب کابری </a></li>
                                     <li><a href=""> تغییر رمز عبور </a></li>
                                     <li><a href="{{url_for('enter_phone')}}"> ثبت شماره همراه</a></li>
-                                    <li><a href="{{url_for('upload_resume')}}"> ارسال رزومه</a></li>
+                                    
+                              <li><a href="{{url_for('upload_resume')}}"> {% if user.resume %}آپدیت رزومه{% else %} آپلود رزومه{% endif %}
+                                        
+                                                                
+                                        </a></li>
                                     <li><a href="{{url_for('logout')}}"> خروج از حساب کاربری </a></li>
                                 </ul>
                             </div>
@@ -47,7 +57,20 @@
                                     <li> <i class="zmdi zmdi-calendar-check"></i> تاریخ عضویت : 01/01/1395 </li>
                                     <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if user.phone %}{{user.phone}}{% else %}شما هنوز شماره ای ثبت نکرده اید : <a href="{{url_for('enter_phone')}}"> ثبت </a>{% endif %}</li>
                                 </ul>
+    
                             </div>
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="custom-alert">
+                                <ul class="flashes">
+                                    {% for message in messages %}
+                                    <li style="color:block;  align-items: center;">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+                            {% endif %}
+                            {% endwith %}
+                            
                         </div>  
                     </section>
                 </div>

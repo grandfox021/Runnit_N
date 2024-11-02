@@ -1,6 +1,15 @@
 from . import db
 from werkzeug.security import generate_password_hash,check_password_hash   # type: ignore
 from datetime import datetime
+from sqlalchemy import Enum as SQLAEnum
+from enum import Enum
+
+class ResumeStatus(Enum):
+    P = "Pending"
+    A = "Approved"
+    D = "Declined"
+# Resume Model
+
 
 # User table with one-to-many relationship with Post and Comment
 # User Model
@@ -12,7 +21,7 @@ class User(db.Model):
     phone_number = db.Column(db.String(15), nullable=True)
     profile_pic = db.Column(db.String(200))
     resume = db.Column(db.String(150), nullable=True)  # Stores the resume file path
-    resume_approved = db.Column(db.Boolean, default=False)
+    resume_approved = db.Column(SQLAEnum(ResumeStatus), nullable=True)
     _password = db.Column(db.String(250), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_superuser = db.Column(db.Boolean, default=False)
@@ -27,7 +36,6 @@ class User(db.Model):
     course = db.relationship('Course', backref='user', lazy=True)
     # Discriminator column (to distinguish child classes)
     type = db.Column(db.String(50))
-
 
 
 
@@ -50,9 +58,6 @@ class User(db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self._password, password)
-
-
-
 
     def verify_phone_number(self):
         pass
@@ -162,7 +167,8 @@ class Intern(User):
         db.session.add(iq_test)
         db.session.commit()
 
-# Resume Model
+
+
 class Resume(db.Model):
     resume_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
@@ -196,7 +202,7 @@ class Course(db.Model):
     body = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Integer)
     image = db.Column(db.String(200))
-
+    closed = db.Column(db.Boolean, default=False)
     # Defined a property to count participants
     @property
     def participant_count(self):
