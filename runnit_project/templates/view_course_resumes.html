@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumes for {{ course.name }}</title>
+</head>
+<body>
+    <h1>Resumes for {{ course.name }}</h1>
+    <p>Course Description: {{ course.description }}</p>
+    <p>Total Resumes Submitted: {{ resumes | length }}</p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Resume Title</th>
+                <th>Submitted By</th>
+                <th>Submission Date</th>
+                <th>View Resume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resume in resumes %}
+                <tr>
+                    <td>{{ resume.title }}</td>
+                    <td>{{ resume.user.firstname }} {{ resume.user.lastname }}</td>
+                    <td>{{ resume.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_pdf', filename=resume.file_name) }}" target="_blank">View PDF</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if resumes | length == 0 %}
+        <p>No resumes have been submitted for this course.</p>
+    {% endif %}
+</body>
+</html>

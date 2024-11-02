@@ -43,9 +43,10 @@
                     <h2>دوره ها</h2>
                     <ul>{% if courses %}
                         {% for course in  courses %}
-                        <li>{{course.name}}</li>{% endfor %}
+                        <li><a href="{{url_for('course_detail' , course_id = course.course_id)}}"> {{course.name}}</a><div>  عملیات :</div><a href="{{url_for('close_course',course_id = course.course_id)}}"> بستن دوره </a> <br> <a href="{{url_for('open_course',course_id = course.course_id)}}">  باز کردن دوره </a><br> <a href=""> بررسی رزومه های ارسالی برای این دوره</a><hr>
+                            {% endfor %}
                     </ul>
-                    <a href="{{ url_for('create_course') }}"> ایجاد دوره جدید </a></li>           
+                    ایجاد دوره جدید :<a href="{{ url_for('create_course') }}"> ثبت</a></li>           
                 </div>
                 {% else %}
                 هنوز دوره ای ایجاد نکرده اید :
@@ -72,15 +73,16 @@
     </div>  
         {% endif %}
 
-        <!-- نمایش اعضای شرکت‌کننده‌ها -->
-        <div class="members">
-            <h2>اعضا</h2>
-            <ul>
-                <li>شرکت کننده 1</li>
-                <li>شرکت کننده 2</li>
-                <li>شرکت کننده 3</li>
-            </ul>
-        </div>
+
+            <!-- نمایش اعضای شرکت‌کننده‌ها -->
+            <div class="members">
+                <h2>اعضای درخواست دهنده برای شرکت در دوره</h2>
+                <ul>
+                    <li>شرکت کننده 1</li>
+                    <li>شرکت کننده 2</li>
+                    <li>شرکت کننده 3</li>
+                </ul>
+            </div>
         <!-- نمایش اطلاعات شرکت‌کننده‌ها -->
         <div class="participant-info">
             <h2>اطلاعات شرکت کننده</h2>
