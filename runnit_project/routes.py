@@ -42,6 +42,11 @@ def home() :
 
     return render_template("home.html", user = user )
 
+@app.route("/admin")
+def admin() :
+    return render_template("admin/index.html")
+
+
 @app.route("/courses", methods=['GET'])
 def courses() :
 

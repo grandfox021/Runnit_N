@@ -12,7 +12,9 @@
     {% block exteraStyles %}{% endblock %}
 <body>
     {% include "./shared/HeaderComponent.html" %}
-        {% block content %}{% endblock %}
+        <div style="height: 100dvh;">
+            {% block content %}{% endblock %}
+        </div>
     {% include "./shared/FooterComponent.html" %}
 </body>
     {% include "./shared/_footerREF.html" %}  
