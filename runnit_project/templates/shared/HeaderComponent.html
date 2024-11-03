@@ -1,42 +1,4 @@
-<!-- main manu -->
-<div class="main-menu">
-    <div class="container">
-        <nav>
-            <span class="responsive-sign"><i class="zmdi zmdi-menu"></i></span>
-            <ul>
-                <li><a href="{{ url_for('home') }}">صفحه اصلی  </a>
-                    <ul>
-                        <li><a href=""> تیتر </a></li>
-                        <li><a href=""> اخبار </a></li>
-                    </ul>
-                </li>
-                <li><a href="{{ url_for('courses') }}"> دوره های رانیت </a>
-                    <ul>
-                        <li><a href=""> پایتون </a></li>
-                        <li><a href=""> ری اکت </a></li>
-                        <li><a href=""> هوش مصنوعی </a></li>
-                        <li><a href="">  سئو </a></li>
-                        <li><a href="">طراحی سایت</a></li>
-                    </ul>
-                </li>
-                <li><a href="{{url_for('login')}}"> ورود به سایت</a></li>
-                <li><a href="{{url_for('signup')}}">  مراحل ثبت نام </a>
-                    <ul>
-                        <li><a href="{{url_for('signup')}}">  ثبت نام در سایت </a></li>
-                        <li><a href="">  IQازمون  </a></li>
-                        <li><a href="">ارسال رزومه</a></li>
-                        <li><a href="">ازمون زبان انگلیسی </a></li>
-                        <li><a href=""> ازمون برنامه نویسی </a></li>
-                    </ul>
-                </li>
-                <li><a href="{{url_for('all_posts')}}"> مطالب  </a></li>
-                <li><a href=""> اطلاعات مجموعه </a></li>
-                <li><a href="{{url_for('recent_users_comments')}}"> نظرات شرکت کنندگان قبلی  </a></li>
-            </ul>
-        </nav>
-    </div>
-</div>
-<!-- /main manu -->
+
 <div class="landing-layer">
     <div class="container">
         <nav>
@@ -114,6 +76,45 @@
                 <button><i class="zmdi zmdi-search"></i></button>
             </form>
         </div>
+    </div>
+</div>
+
+<!-- main manu -->
+<div class="main-menu">
+    <div class="container">
+        <nav>
+            <span class="responsive-sign"><i class="zmdi zmdi-menu"></i></span>
+            <ul>
+                <li><a href="{{ url_for('home') }}">صفحه اصلی  </a>
+                    <ul>
+                        <li><a href=""> تیتر </a></li>
+                        <li><a href=""> اخبار </a></li>
+                    </ul>
+                </li>
+                <li><a href="{{ url_for('courses') }}"> دوره های رانیت </a>
+                    <ul>
+                        <li><a href=""> پایتون </a></li>
+                        <li><a href=""> ری اکت </a></li>
+                        <li><a href=""> هوش مصنوعی </a></li>
+                        <li><a href="">  سئو </a></li>
+                        <li><a href="">طراحی سایت</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{url_for('login')}}"> ورود به سایت</a></li>
+                <li><a href="{{url_for('signup')}}">  مراحل ثبت نام </a>
+                    <ul>
+                        <li><a href="{{url_for('signup')}}">  ثبت نام در سایت </a></li>
+                        <li><a href="">  IQازمون  </a></li>
+                        <li><a href="">ارسال رزومه</a></li>
+                        <li><a href="">ازمون زبان انگلیسی </a></li>
+                        <li><a href=""> ازمون برنامه نویسی </a></li>
+                    </ul>
+                </li>
+                <li><a href="{{url_for('all_posts')}}"> مطالب  </a></li>
+                <li><a href=""> اطلاعات مجموعه </a></li>
+                <li><a href="{{url_for('recent_users_comments')}}"> نظرات شرکت کنندگان قبلی  </a></li>
+            </ul>
+        </nav>
     </div>
 </div>
 
