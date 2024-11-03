@@ -1,48 +1,123 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Course</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f6f9;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form div {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+        }
+        input[type="file"] {
+            font-size: 14px;
+            color: #333;
+        }
+        ul {
+            margin-top: 5px;
+            color: #d9534f;
+            font-size: 14px;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-    <h1>Create a New Course</h1>
-    
-    <form method="POST" action="{{ url_for('create_course') }}" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}  <!-- For CSRF protection -->
+    <div class="container">
+        <h1>Create a New Course</h1>
         
-        <div>
-            {{ form.name.label }}<br>
-            {{ form.name(size=50) }}
-            {% if form.name.errors %}
-                <ul>
-                {% for error in form.name.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
+        <form method="POST" action="{{ url_for('create_course') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}  <!-- For CSRF protection -->
+            
+            <div>
+                {{ form.name.label }}
+                {{ form.name(size=50) }}
+                {% if form.name.errors %}
+                    <ul>
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
 
-        <div>
-            {{ form.body.label }}<br>
-            {{ form.body(cols=60, rows=10) }}
-            {% if form.body.errors %}
-                <ul>
-                {% for error in form.body.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
+            <div>
+                {{ form.body.label }}
+                {{ form.body(cols=60, rows=10) }}
+                {% if form.body.errors %}
+                    <ul>
+                    {% for error in form.body.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
 
-        <div>
-            {{ form.image.label }}<br>
-            {{ form.image() }}
-        </div>
+            <div>
+                {{ form.image.label }}
+                {{ form.image() }}
+            </div>
 
-        <div>
-            <button type="submit">Submit Post</button>
-        </div>
-    </form>
+            <div>
+                <button type="submit">Submit Course</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
