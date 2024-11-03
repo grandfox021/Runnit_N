@@ -16,7 +16,7 @@
                     <a href="{{url_for('course_detail',course_id = course.course_id)}}" class="img-layer">
                         <img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" class="card-img-top" alt="آموزش برنامه نویسی" style="border-radius: 10px;">
                     </a>
-                    <h5 class="card-title mt-3">معرفی شرکت گلدیس</h5>
+                    <h5 class="card-title mt-3">جزئیات دوره</h5>
                     <p class="card-text limited-text card-text text-muted">{{course.body}}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="badge badge-success">رایگان</span>
