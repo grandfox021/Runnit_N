@@ -591,9 +591,9 @@ main#home-page{
     width: 100%;
     margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 0 5px #ccc;
-    -moz-box-shadow: 0 0 5px #ccc;
-    -webkit-box-shadow: 0 0 5px #ccc;
+    box-shadow: 0 0 5px #8168c8;
+    -moz-box-shadow: 0 0 5px #8168c8;
+    -webkit-box-shadow: 0 0 5px #8168c8;
     background-color: #fff
 }
 .term-content > header h1{
