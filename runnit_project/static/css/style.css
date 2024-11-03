@@ -82,13 +82,13 @@ a,i,input[type="submit"], form button{ -webkit-transition : all 0.2s linear 0s; 
 }
 .landing-layer header h1{
   line-height: 30px;
-  padding: 10px 0 10px;
+  padding: 10px 0 18px;
   font-size: 31px
 }
 .landing-layer header h2,
 .landing-layer header h3{
   line-height: 30px;
-  padding: 7px 0;
+  padding: 10px 0;
   font-size: 23px
 }
 .landing-layer .search-form {
