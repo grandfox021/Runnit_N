@@ -13,17 +13,17 @@
                     <h4 class="mb-0">آموزش برنامه نویسی</h4>
                 </div>
                 <div class="card-body">
-                    <a href="{{url_for('detail_post_demo')}}" class="img-layer">
-                        <img src="/../../static/images/pic/1.jpg" class="card-img-top" alt="آموزش برنامه نویسی" style="border-radius: 10px;">
+                    <a href="{{url_for('course_detail',course_id = course.course_id)}}" class="img-layer">
+                        <img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" class="card-img-top" alt="آموزش برنامه نویسی" style="border-radius: 10px;">
                     </a>
                     <h5 class="card-title mt-3">معرفی شرکت گلدیس</h5>
-                    <p class="card-text text-muted">شرکت گلدیس برگزار کننده رایگان دوره های کارآموزی به منظور کشف و استخدام استعداد های برتر است.</p>
+                    <p class="card-text limited-text card-text text-muted">{{course.body}}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="badge badge-success">رایگان</span>
                         <i class="text-muted">مدت زمان: 1:52:32</i>
                     </div>
                     <div class="text-center mt-4">
-                        <a href="{{url_for('detail_post_demo')}}" class="btn btn-info">مشاهده جزئیات</a>
+                        <a href="{{url_for('course_detail',course_id = course.course_id)}}" class="btn btn-info">مشاهده جزئیات</a>
                     </div>
                 </div>
             </div>
@@ -34,6 +34,28 @@
         
     </div>
 </div>
+
+<!-- Additional CSS for Image and Text Styling -->
+<style>
+
+    .card-img-container {
+        height: 200px; /* Set a fixed height for uniformity */
+        overflow: hidden;
+    }
+    .card-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures images fill the container while maintaining aspect ratio */
+    }
+    .limited-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Limits to 3 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adds ellipsis (…) after truncated text */
+        max-height: 4.5em; /* Controls height to ensure text limit */
+    }
+</style>
 
 
 

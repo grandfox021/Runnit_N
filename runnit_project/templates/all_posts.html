@@ -31,6 +31,9 @@
                             </p>
                             <p class="card-text limited-text">{{ post.body }}</p>
                         </div>
+                        <div class="text-center mt-4">
+                            <a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="btn btn-info">مشاهده جزئیات</a>
+                        </div>
                     </div>
                 </a>
             </div>

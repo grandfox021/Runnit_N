@@ -299,7 +299,7 @@ def create_post():
     return render_template('create_post.html', form=form)
 
 
-@app.route("/admin")
+@app.route("/admin-panel")
 @admin_required    
 @login_required
 def admin_panel():
