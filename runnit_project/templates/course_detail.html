@@ -1,5 +1,166 @@
 {% extends './shared/base.html' %}
 {% block content %}
+
+<style>
+    .container {
+        margin-top: 0px;
+        padding: 15px;
+    }
+
+    h1, h2, h3 {
+        color: #5a0d77;
+        font-weight: bold;
+    }
+
+    .custom-alert ul {
+        padding: 15px;
+        background-color: #fafafa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .term-description img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        transition: transform 0.3s ease;
+    }
+
+    .term-description img:hover {
+        transform: scale(1.05);
+    }
+
+    .term-description ul li {
+        margin: 12px 0;
+        display: flex;
+        align-items: center;
+        font-size: 1.1em;
+    }
+
+    .term-description ul li i {
+        margin-left: 8px;
+        color: #f27a24;
+    }
+
+    .user-comments form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .user-comments .comment-list .comment-row {
+        display: flex;
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+    }
+
+    .user-comments .comment-row img {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user-comments .comment-row .left-col h3 {
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .statistics ul li {
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        font-size: 1.1em;
+    }
+
+    .btn-success {
+        background-color: #7d3c98;
+        border-color: #7d3c98;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-success:hover {
+        background-color: #5a0d77;
+    }
+
+    .pagination .page-item .page-link {
+        color: #7d3c98;
+    }
+
+    .share-layer, .tags-layer {
+        margin-top: 15px;
+        padding: 12px;
+        background-color: #f4f4f4;
+        border-radius: 8px;
+    }
+
+    .tags-layer a {
+        margin-right: 5px;
+        color: #7d3c98;
+        font-weight: bold;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .tags-layer a:hover {
+        color: #5a0d77;
+    }
+    .term-info {
+    margin-top: 15px;
+}
+.term-info {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.term-info:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.term-info h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #5a5a5a;
+    border-bottom: 2px solid #6c63ff;
+    padding-bottom: 10px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.info-item {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.info-item:hover {
+    background-color: #e0e0e0;
+}
+
+.info-item strong {
+    display: block;
+    color: #333;
+}
+
+.info-item span {
+    color: #666;
+    font-weight: 500;
+}
+
+</style>
+
 <br>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -16,20 +177,16 @@
 <br>
 <div class="container">
     <section class="term-content">
-        <header><h1> {{course.name}}</h1></header>
+        <header><h1> {{ course.name }}</h1></header>
         <div class="row">
-          
-            <div class="col-md-8 col-sm-12 col-xs-12 pull-right">
+            <div class="col-md-8 col-sm-12 col-xs-12">
                 <section class="term-description">
                     <img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" alt="Post Image">
+                    <div><p>منتشر کننده: {{ course.user.firstname }} {{ course.user.lastname }}</p></div>
+                    <h2> {{ course.name }}</h2>
+                    <p>{{ course.body }}</p>
 
-                    <div> <p>منتشر کننده :{{course.user.firstname}} {{course.user.lastname}}</p></div>
-                    <h2> {{course.name}}</h2>
-                    <p>
-                        {{course.body}}
-                    </p>
-
-                    <h2> سرفصل های این دوره : </h2>
+                    <h2>سرفصل‌های این دوره:</h2>
                     <ul>
                         <li> <h3> معرفی این دوره </h3> <i> رایگان </i> <span>00:15:12</span></li>
                         <li> <h3> چرا شی گرایی یاد بگیریم ؟ </h3> <i> نقدی </i>  <span>01:15:12</span></li>
@@ -48,176 +205,103 @@
                     <header><h3> نظرات کاربران </h3></header>
                     <div class="inner">
                         <form>
-                            <div class="row">
-
-                                <div class="col-md-8 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <textarea name="comment_body" class="form-control" placeholder="متن نظر"></textarea>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-8 col-sm-7 col-xs-7">
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-xs-12">
-                                    <button type="submit" class="btn btn-success"> ثبت دیدگاه </button>
-                                </div>
+                            <div class="form-group">
+                                <textarea name="comment_body" class="form-control" placeholder="متن نظر"></textarea>
                             </div>
+                            <button type="submit" class="btn btn-success"> ثبت دیدگاه </button>
                         </form>
-
                         <div class="comment-list">
-                            <!-- row -->
                             <div class="comment-row">
                                 <img src="./../../static/images/avatar.jpg">
                                 <div class="left-col">
                                     <h3> میترا رحیمی </h3>
                                     <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
+                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ...</p>
                                 </div>
                             </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="./../../static/images/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="./../../static/images/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="./../../static/images/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="./../../static/images/avatar.jpg">
-                                <div class="left-col">
-                                    <h3>  محسن ابراهیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                      <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true"><i class="zmdi zmdi-chevron-right"></i></span>
-                                      </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                      <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true"><i class="zmdi zmdi-chevron-left"></i></span>
-                                      </a>
-                                    </li>
-                                </ul>
-                            </nav>
-
+                            <!-- Repeat comment-row as needed -->
                         </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item"><a class="page-link" href="#"><i class="zmdi zmdi-chevron-right"></i></a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#"><i class="zmdi zmdi-chevron-left"></i></a></li>
+                            </ul>
+                        </nav>
                     </div>
                 </section>
             </div>
 
-            <aside class="col-md-4 col-sm-12 col-xs-12 pull-right">
+            <aside class="col-md-4 col-sm-12 col-xs-12">
                 <div class="statistics">
                     <ul>
-                        <li>
-                            <span> مدت دوره </span>
-                            <i> 15:30:00 </i>
-                        </li>
-                        <li>
-                            <span>دتعداد جلسه های حضوری </span>
-                            <i> 16 </i>
-                        </li>
-                        <li>
-                            <span> تعداد دانشجوها </span>
-                            <i> 42 نفر </i>
-                        </li>
+                        <li><span>مدت دوره:</span><i>15:30:00</i></li>
+                        <li><span>تعداد جلسه‌های حضوری:</span><i>16</i></li>
+                        <li><span>تعداد دانشجوها:</span><i>42 نفر</i></li>
                     </ul>
-                    
+            
                     <form action="{{ url_for('enroll_course', course_id=course.course_id) }}" method="post">
-                        <a><button class="btn btn-success" type="submit"> 
-                        
-                        
-                            شرکت در دوره </button></a>
+                        <button class="btn btn-success form-control" type="submit">شرکت در دوره</button>
+                    </form>
+            
+                    <br>
+            
+                    <!-- بخش اطلاعات مدرس -->
+                    <article class="teacher-info">
+                        <img src="{{ url_for('static', filename='images/vali.jpg') }}" alt="Teacher Image" style="width: 100%; border-radius: 20px; margin-bottom: 15px;" />
+                        <h2>مدرس: ولی الله رییسی</h2>
+                        <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ...</p>
+                    </article>
+            
+                    <article class="term-info">
+                        <h2>اطلاعات این دوره</h2>
+                        <div class="info-grid">
+                            <div class="info-item btn-success">
+                                <strong>سطح دوره:</strong>
+                                <span>پیشرفته</span>
+                            </div>
+                            <div class="info-item btn-primary">
+                                <strong>وضعیت دوره:</strong>
+                                <span>در حال برگزاری</span>
+                            </div>
+                            <div class="info-item btn-info">
+                                <strong>قیمت:</strong>
+                                <span>رایگان</span>
+                            </div>
+                            <div class="info-item btn-danger">
+                                <strong>تاریخ ثبت:</strong>
+                                <span>چهارشنبه ۲۱ شهریور 1403</span>
+                            </div>
+                            <div class="info-item btn-warning">
+                                <strong>آخرین بروزرسانی:</strong>
+                                <span>چهارشنبه ۲۱ شهریور 1403</span>
+                            </div>
+                        </div>
+                    </article>
                     
-
-                </form>
-             <br>
-
-                <article class="teacher-info">
-                    <img src="./../static/images/vali.jpg">
-                    <h2> مدرس : ولی الله رییسی </h2>
-                    <p>
-                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است استفاده از طراحان گرافیک است ... 
-                    </p>
-                </article>
-
-                <article class="term-info">
-                    <h2> اطلاعات این دوره </h2>
-                    <ul>
-                        <li>سطح دوره: پیشرفته</li>
-                        <li>وضعیت دوره: در حال برگزاری</li>
-                        <li>قیمت :رایگان</li>
-                        <li>تاریخ ثبت این دوره : چهار شنبه ۲۱ شهریور 1403</li>
-                        <li>آخرین بروزرسانی دوره : چهار شنبه ۲۱ شهریور 1403</li>
-                    </ul>
-                </article>
-
-                <div class="share-layer">
-                    <span> به اشتراک گذاری </span>
-                    <a href=""><i class="zmdi zmdi-facebook"></i></a>
-                    <a href=""><i class="zmdi zmdi-google-old"></i></a>
-                    <a href=""><i class="zmdi zmdi-twitter"></i></a>
-                    <a href=""><i class="zmdi zmdi-linkedin"></i></a>
+                    
+            
+                    <!-- بخش اشتراک گذاری -->
+                    <div class="share-layer" style="margin-top: 20px; padding: 10px; background-color: #f4f4f4; border-radius: 8px;">
+                        <span>به اشتراک گذاری</span>
+                        <a href="#" style="margin-right: 5px;"><i class="zmdi zmdi-facebook"></i></a>
+                        <a href="#" style="margin-right: 5px;"><i class="zmdi zmdi-google-old"></i></a>
+                        <a href="#" style="margin-right: 5px;"><i class="zmdi zmdi-twitter"></i></a>
+                        <a href="#" style="margin-right: 5px;"><i class="zmdi zmdi-linkedin"></i></a>
+                    </div>
+            
+                    <!-- بخش برچسب‌ها -->
+                    <div class="tags-layer" style="margin-top: 15px;">
+                        <a href="#" style="color: #7d3c98; font-weight: bold; text-decoration: none; margin-right: 5px;">ربات تلگرام</a>
+                        <a href="#" style="color: #7d3c98; font-weight: bold; text-decoration: none; margin-right: 5px;">ساخت ربات</a>
+                        <a href="#" style="color: #7d3c98; font-weight: bold; text-decoration: none;">برنامه نویسی ربات</a>
+                    </div>
                 </div>
-
-                <div class="tags-layer">
-                    <a href=""> ربات تلگرام </a>
-                    <a href=""> ساخت ربات </a>
-                    <a href=""> برنامه نویسی ربات </a>
-                    <a href=""> کدنویسی ربات </a>
-                    <a href=""> ربات تلگرام </a>
-                    <a href=""> ساخت ربات </a>
-                    <a href=""> برنامه نویسی ربات </a>
-                    <a href=""> کدنویسی ربات </a>
-                </div>
-
             </aside>
+            
+            
         </div>
     </section>
 </div>

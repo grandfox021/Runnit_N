@@ -1,128 +1,179 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Details</title>
-    <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            direction: rtl; /* Sets the entire document to RTL */
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 24px;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .post-details {
-            margin-bottom: 20px;
-        }
-        .post-details div {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 10px;
-            text-align: right; /* Aligns text to the right */
-        }
-        .post-details img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-        .comment-section-container {
-            margin-top: 30px;
-        }
-        .comment-section-title {
-            font-size: 20px;
-            color: #333;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            text-align: right;
-        }
-        .comment {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            text-align: right;
-        }
-        .comment p {
-            color: #333;
-            font-size: 16px;
-        }
-        #comment-form {
-            margin-top: 20px;
-            text-align: right;
-        }
-        #comment-form label {
-            font-weight: bold;
-            color: #555;
-            display: block;
-            margin-bottom: 5px;
-        }
-        #comment-form textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            text-align: right;
-        }
-        .btn-primary {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>{{ post.title }}</h1>
-        
-        <div class="post-details">
-            <div><strong>موضوع:</strong> {{ post.title }}</div>
-            <div><strong>متن:</strong> {{ post.body }}</div>
-            <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" alt="Post Image">
-            <div><strong>منتشر کننده:</strong> {{ post.user.firstname }} {{ post.user.lastname }}</div>
-            <hr>
-        </div>
+{% extends './shared/base.html' %}
+{% block title %}جزئیات مقاله - {{ post.title }}{% endblock %}
 
+{% block content %}
+<style>
+    .article-details {
+        background-color: #f2f4f8; 
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
+
+    .article-details .container {
+        margin: 40px auto; 
+        max-width: 800px; 
+        padding: 20px;
+        border-radius: 10px; 
+        background-color: #ffffff; 
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+        transition: transform 0.3s ease; 
+    }
+
+    .article-details .container:hover {
+        transform: scale(1.02); 
+    }
+
+    .article-details h1 {
+        color: #4A2C6D; 
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        opacity: 0; 
+        animation: fadeIn 0.8s forwards; 
+    }
+
+    .article-details .post-details {
+        padding: 20px;
+        border-radius: 8px; 
+        background-color: #f9f9f9; 
+        margin-bottom: 30px; 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+        opacity: 0; 
+        animation: fadeIn 0.8s forwards; 
+        animation-delay: 0.2s; 
+    }
+
+    .article-details .post-details strong {
+        color: #4A2C6D; 
+        font-size: 1.1rem;
+    }
+
+    .article-details .detail-item {
+        margin-bottom: 15px; 
+        padding: 10px; 
+        border-left: 4px solid #4A2C6D; 
+    }
+
+    .article-details .comment-section-container {
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #ffffff; 
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px; 
+        opacity: 0; 
+        animation: fadeIn 0.8s forwards; 
+        animation-delay: 0.4s; 
+    }
+
+    .article-details .comment-section-title {
+        color: #4A2C6D; 
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #ddd;
+        padding-bottom: 10px;
+        text-align: center; 
+    }
+
+    .article-details .comment {
+        background-color: #f9f9f9; 
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd; 
+        transition: transform 0.3s, background-color 0.3s; 
+        opacity: 0; 
+        animation: fadeIn 0.8s forwards; 
+        animation-delay: 0.6s; 
+    }
+
+    .article-details .comment:hover {
+        transform: scale(1.02); 
+        background-color: #e0e0e0; 
+    }
+
+    .article-details .btn-primary {
+        background-color: #4A2C6D; 
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px; 
+        font-size: 1.1rem; 
+        transition: background-color 0.3s ease, transform 0.3s; 
+        cursor: pointer; 
+        display: block; 
+        margin: 20px auto; 
+    }
+
+    .article-details .btn-primary:hover {
+        background-color: #3A1E5B; 
+        transform: scale(1.05); 
+    }
+
+    .article-details textarea {
+        resize: none;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        transition: border-color 0.3s; 
+        width: 100%; 
+    }
+
+    .article-details textarea:focus {
+        border-color: #4A2C6D; 
+        outline: none; 
+    }
+
+    .article-details img {
+        border-radius: 10px; 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 100%; 
+        height: auto;
+        margin: 20px 0; 
+        opacity: 0; 
+        animation: fadeIn 0.8s forwards;
+        animation-delay: 0.8s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px); 
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0); 
+        }
+    }
+</style>
+
+<div class="article-details"> 
+    <div class="container">
+        <h1 class="post-title">{{ post.title }}</h1>
+        <div class="post-details">
+            <div class="detail-item">
+                <strong class="detail-label">موضوع:</strong>
+                <p class="detail-content">{{ post.title }}</p>
+            </div>
+        
+            <div class="detail-item">
+                <strong class="detail-label">متن:</strong>
+                <p class="detail-content">{{ post.body }}</p>
+            </div>
+        
+            <div class="detail-item text-center">
+                <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" 
+                     alt="Post Image" class="img-fluid rounded shadow-sm">
+            </div>
+        
+            <div class="detail-item">
+                <strong class="detail-label">منتشر کننده:</strong>
+                <p class="detail-content">{{ post.user.firstname }} {{ post.user.lastname }}</p>
+            </div>
+        </div>
+        
         <div class="comment-section-container">
             <h3 class="comment-section-title">{{ translations['comments'] }}</h3>
-            <div id="comments-list">
+            <div id="comments-list" class="mb-4">
                 {% for comment in comments %}
                     <div class="comment">
                         <p><strong>{{ comment.user.firstname }} {{ comment.user.lastname }}:</strong> {{ comment.body }}</p>
@@ -131,16 +182,18 @@
             </div>
 
             {% if not user == "" %}
-                <form method="POST" id="comment-form">
-                    <input type="hidden" name="post_id" value="">
-                    <div class="form-group">
-                        <label for="text">{{ translations['send_a_comment'] }}</label>
-                        <textarea name="comment" id="text" rows="4" required></textarea>
+                <form method="POST" id="comment-form" class="mt-4">
+                    <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                    <div class="form-group mb-3">
+                        <label for="text" class="form-label">{{ translations['send_a_comment'] }}</label>
+                        <textarea name="comment" id="text" rows="4" class="form-control" required></textarea>
                     </div>
-                    <button name="comment_submit" type="submit" class="btn-primary">{{ translations['submit_comment'] }}</button>
+                    <button name="comment_submit" type="submit" class="btn btn-primary form-control">ارسال</button>
                 </form>
+            {% else %}
+                <p>{{ translations['login_to_comment'] }}</p>
             {% endif %}
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -38,7 +38,9 @@ a,i,input[type="submit"], form button{ -webkit-transition : all 0.2s linear 0s; 
   width: 100%;
   background: url('../images/slide.jpg') no-repeat center center / cover;
   position: relative;
+  filter: blur(0.3px); 
 }
+
 .landing-layer nav {
   padding: 15px 0 0
 }

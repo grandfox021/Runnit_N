@@ -31,7 +31,7 @@ def set_language(lang):
 @app.route("/")
 @app.route("/home")
 def home() :
-
+    sliders = [{'title': 'test', 'image': 'test.jpg'},{'title': 'test2', 'image': 'test2.png'}]
     if "user_id" in session :
         user_id = session.get("user_id")
         user = User.query.filter_by(user_id = user_id).first()
@@ -40,7 +40,8 @@ def home() :
     else :
         user = None
 
-    return render_template("home.html", user = user )
+    show_header = True
+    return render_template("home.html", user = user, sliders = sliders, show_header=show_header )
 
 @app.route("/admin")
 def admin() :
@@ -51,8 +52,9 @@ def admin() :
 def courses() :
 
     courses = Course.query.all()
+    show_header = True
 
-    return render_template("course_list.html", courses=courses)
+    return render_template("course_list.html", courses=courses, show_header=show_header)
 
 
 
@@ -424,9 +426,8 @@ def post_detail(post_id):
         return redirect(url_for('post_detail',post_id = post_id))
 
 
-    comments = Comment.query.filter_by(post_id = post_id)
-    return render_template("post_detail.html" , post=post,comments = comments,
-                           translations=translations[session["language"]])
+    comments = Comment.query.filter_by(post_id=post_id).all()
+    return render_template("post_detail.html" , post=post,comments = comments, translations=translations[session["language"]])
 
 @login_required
 @app.route('/user/account')
@@ -446,8 +447,9 @@ def detail_post_demo() :
 def all_posts():
 
     posts = Post.query.all()
+    show_header = True
 
-    return render_template("all_posts.html", posts = posts,translations=translations[session["language"]], lang=session["language"])
+    return render_template("all_posts.html", posts = posts,translations=translations[session["language"]], lang=session["language"], show_header=show_header)
 
 
 @app.route("/recent_users_comments")
