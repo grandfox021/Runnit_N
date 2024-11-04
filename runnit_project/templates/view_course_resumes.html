@@ -2,38 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resumes for {{ course.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pending Resumes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 40px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn-accept {
+            color: white;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-reject {
+            color: white;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
 </head>
 <body>
-    <h1>Resumes for {{ course.name }}</h1>
-    <p>Course Description: {{ course.description }}</p>
-    <p>Total Resumes Submitted: {{ resumes | length }}</p>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Resume Title</th>
-                <th>Submitted By</th>
-                <th>Submission Date</th>
-                <th>View Resume</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for resume in resumes %}
+<div class="container">
+    <h1 class="text-center mb-4">Pending Resumes</h1>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead class="table-light">
                 <tr>
-                    <td>{{ resume.title }}</td>
-                    <td>{{ resume.user.firstname }} {{ resume.user.lastname }}</td>
-                    <td>{{ resume.created_at.strftime('%Y-%m-%d') }}</td>
-                    <td>
-                        <a href="{{ url_for('admin_pdf', filename=resume.file_name) }}" target="_blank">View PDF</a>
-                    </td>
+                    <th scope="col">User</th>
+                    <th scope="col">IQ Score</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for resume in resumes %}
+                    <tr>
+                        <td>{{ resume.user.name }}</td>
+                        <td>{{ resume.iq_score }}</td>
+                        <td>{{ resume.status }}</td>
+                        <td>
+                            <form action="{{ url_for('accept_resume', resume_id=resume.id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-accept btn-sm">Accept</button>
+                            </form>
+                            <form action="{{ url_for('reject_resume', resume_id=resume.id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-reject btn-sm">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    {% if resumes | length == 0 %}
-        <p>No resumes have been submitted for this course.</p>
-    {% endif %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

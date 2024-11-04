@@ -7,7 +7,7 @@ from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm,ResumeUp
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
 from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_PATH_FOR_RESUME
-from .models import User,Post,Superuser,Admin,Course,Resume,Comment,Participant
+from .models import User,Post,Superuser,Admin,Course,Resume,Comment,Participant,IQTest
 from werkzeug.utils import secure_filename
 from twilio.rest import Client
 import random
@@ -542,6 +542,7 @@ def enroll_course(course_id):
 @app.route("/upload_resume", methods=["GET", "POST"])
 @login_required
 def upload_resume():
+    user = User.query.filter_by(user_id = session.get("user_id"))
     form = ResumeUploadForm()
     if form.validate_on_submit():
         resume_file = form.resume.data
@@ -559,7 +560,6 @@ def upload_resume():
             existing_resume.file_path = filename
             existing_resume.approved = False  # Reset approval status on new upload
         else:
-            user = User.query.filter_by(user_id = session.get("user_id"))
             user.resume = resume_path
             new_resume = Resume(file_path=filename, approved=False, user_id=session.get("user_id"))
             db.session.add(new_resume)
@@ -592,7 +592,9 @@ def open_course(course_id):
 @app.route('/course/<int:course_id>/resumes')
 def view_course_resumes(course_id):
     # Get the course and associated resumes
+
     course = Course.query.get_or_404(course_id)
+
     resumes = Resume.query.filter_by(course_id=course_id,approved=False).all()  # Assuming course_id exists in Resume
 
     return render_template('view_course_resumes.html', course=course, resumes=resumes)
@@ -607,7 +609,7 @@ def approve_resume(resume_id):
     resume = Resume.query.get_or_404(resume_id)
     user = User.query.filter_by( user_id = resume.user_id)
     user.resume_approved = "A"
-    resume.approved = True
+    resume.approved = "A"
     db.session.commit()
     send_course_approved_email(user.email)
     flash("Resume approved successfully.")
@@ -619,8 +621,54 @@ def reject_resume(resume_id):
     user = User.query.filter_by( user_id = resume.user_id)
     send_course_declined_email(user.email)
     user.resume_approved = "D"
-    resume.approved = False
+    resume.approved = "D"
     # db.session.delete(resume)  # Remove the resume if rejected
-    # db.session.commit()
+    db.session.commit()
     flash("Resume rejected and removed.")
     return redirect(url_for("review_resumes"))
+
+
+@app.route('/submit_iq_test/<int:user_id>', methods=['POST'])
+@login_required
+def submit_iq_test(user_id):
+
+    if request.method == "POST" :
+        # Define the correct answers for each question
+        correct_answers = {
+            "q1": "30",
+            "q2": "یکشنبه",
+            "q3": "0",
+            "q4": "54",
+            "q5": "9",
+            "q6": "آلمان",
+            "q7": "22.5",
+            "q8": "7",
+            "q9": "10",
+            "q10": "5",
+            "q11": "75",
+            "q12": "15",
+            "q13": "8",
+            "q14": "2",
+            "q15": "4",
+            "q16": "4",
+            "q17": "360",
+            "q18": "52",
+            "q19": "49",
+            "q20": "8"
+        }
+        # Retrieve user responses
+        user_answers = request.form.to_dict()
+        user = User.query.filter_by(user_id = user_id)
+        # Calculate the score
+        score = 0
+        for question, correct_answer in correct_answers.items():
+            if question in user_answers and user_answers[question].strip() == correct_answer:
+                score += 1
+        iqtest = IQTest(user_id = user_id , test_result = score)
+        user.iqtest_score = score
+        db.session.add(iqtest)
+        db.session.commit()
+        # Redirect to home with score (adjust as necessary for your home view)
+        return redirect(url_for('user_account', user = user))
+    else :
+        return render_template("IQtest.html")

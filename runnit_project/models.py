@@ -22,6 +22,7 @@ class User(db.Model):
     profile_pic = db.Column(db.String(200))
     resume = db.Column(db.String(150), nullable=True)  # Stores the resume file path
     resume_approved = db.Column(SQLAEnum(ResumeStatus), nullable=True)
+    iqtest_score = db.Column(db.Integer, nullable=True)
     _password = db.Column(db.String(250), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_superuser = db.Column(db.Boolean, default=False)
@@ -34,6 +35,7 @@ class User(db.Model):
     ratings = db.relationship('Rating', backref='user', lazy=True)
     resume = db.relationship("Resume", back_populates="user", uselist=False)  # uselist=False ensures one-to-one
     course = db.relationship('Course', backref='user', lazy=True)
+    iqtest = db.relationship('IQTest', backref='user', lazy=True)
     # Discriminator column (to distinguish child classes)
     type = db.Column(db.String(50))
 
@@ -173,7 +175,7 @@ class Resume(db.Model):
     resume_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     file_path = db.Column(db.String(150), nullable=False)  # Path to the resume file
-    approved = db.Column(db.Boolean, default=False)   
+    approved = db.Column(SQLAEnum(ResumeStatus), nullable=True)   
     description = db.Column(db.Text, nullable=True)
     profile_image = db.Column(db.String(200))
     skill = db.Column(db.String(200))
@@ -184,7 +186,7 @@ class Resume(db.Model):
 # IQ Test Model
 class IQTest(db.Model):
     test_id = db.Column(db.Integer, primary_key=True)
-    intern_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     test_result = db.Column(db.Integer)
 
 # MBTI Test Model
@@ -240,3 +242,5 @@ class Rating(db.Model):
 
     def submit_rating_to_course(self):
         pass
+
+
