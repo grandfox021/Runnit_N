@@ -25,7 +25,18 @@
         <h1> </h1>
 
         <h1>پنل مدیریت : {{user.firstname}} {{user.lastname}} </h1>
-
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="custom-alert">
+            <ul class="flashes">
+                {% for message in messages %}
+                <li style="color:red;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+    
         <ul>
             
         <div class="courses">

@@ -577,7 +577,8 @@ def close_course(course_id):
     course = Course.query.filter_by(course_id = course_id)
     course.closed  = True
     db.session.commit()
-
+    flash("دوره با موفقیت بسته شد")
+    return redirect(url_for('admin_panel'))
 
 @app.route("/open-course/<int:course_id>")
 @admin_required
@@ -587,6 +588,8 @@ def open_course(course_id):
     course = Course.query.filter_by(course_id = course_id)
     course.closed  = False
     db.session.commit()
+    flash("دوره با موفقیت باز شد")
+    return redirect(url_for('admin_panel'))
 
 
 @app.route('/course/<int:course_id>/resumes')
