@@ -1,7 +1,7 @@
 from flask import Flask,session
 from flask_sqlalchemy import SQLAlchemy  # type: ignore
 import secrets
-
+from datetime import timedelta
 
 app = Flask(__name__,template_folder="templates")
 
@@ -11,6 +11,8 @@ app.secret_key =secrets.token_hex(16)
 DEFAULT_IMAGE_PATH_FOR_USER = "static/images/uploads/default_pic_for_user.png"
 DEFAULT_IMAGE_PATH_FOR_POST = "static/images/uploads/default_pic_for_post.png" 
 DEFAULT_IMAGE_PATH_FOR_COURSE = "static/images/uploads/default_pic_for_course.png" 
+
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=2)
 
 DEFAULT_PATH_FOR_RESUME = "runnit_project/static/resume_uploads" 
 

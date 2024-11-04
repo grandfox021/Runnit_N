@@ -56,6 +56,12 @@
                                     <li> <i class="zmdi zmdi-email"></i> ایمیل : {{user.email}}</li>
                                     <li> <i class="zmdi zmdi-calendar-check"></i> تاریخ عضویت : 01/01/1395 </li>
                                     <li> <i class="zmdi zmdi-smartphone-android"></i> شماره تماس : {%if user.phone %}{{user.phone}}{% else %}شما هنوز شماره ای ثبت نکرده اید : <a href="{{url_for('enter_phone')}}"> ثبت </a>{% endif %}</li>
+                                    <li> <i class="zmdi zmdi-email"></i>{% if user.iqtest_score or user.iqtest_score == 0 %}نمره شما در تست : {{user.iqtest_score}} </li>{% else %} در آزمون شرکت هوش شرکت کنید <a href="{{url_for('submit_iq_test',user_id = user.user_id)}}">شرکت در آزمون</a>{% endif %} 
+
+                                    
+
+                                        
+
                                 </ul>
     
                             </div>

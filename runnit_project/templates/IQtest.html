@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون آی‌کیو</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            max-width: 700px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px;
+            text-align: left;
+        }
+        h2 {
+            text-align: center;
+            color: #007BFF;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+        }
+        .question label {
+            font-weight: bold;
+            font-size: 1em;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        #timer {
+            text-align: center;
+            font-size: 1.2em;
+            color: red;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            let timeLeft = 420;
+            const timerDisplay = document.getElementById("timer");
+
+            const timer = setInterval(function () {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `زمان باقی مانده: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    document.getElementById("iqForm").submit();
+                }
+            }, 1000);
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>آزمون هوش</h2>
+        <p id="timer">زمان باقی مانده: 7:00</p>
+        
+        <form id="iqForm" action="{{url_for('submit_iq_test')}}" method="POST">
+            <!-- Question 1 -->
+            <div class="question">
+                <label>۱. عدد بعدی در دنباله زیر چیست؟ ۲، ۶، ۱۲، ۲۰، ...</label>
+                <input type="radio" name="q1" value="24"> ۲۴<br>
+                <input type="radio" name="q1" value="28"> ۲۸<br>
+                <input type="radio" name="q1" value="30"> ۳۰<br>
+                <input type="radio" name="q1" value="32"> ۳۲<br>
+            </div>
+            <!-- Question 2 -->
+            <div class="question">
+                <label>۲. اگر امروز چهارشنبه باشد، ۴۳ روز بعد چه روزی خواهد بود؟</label>
+                <input type="radio" name="q2" value="پنجشنبه"> پنجشنبه<br>
+                <input type="radio" name="q2" value="جمعه"> جمعه<br>
+                <input type="radio" name="q2" value="شنبه"> شنبه<br>
+                <input type="radio" name="q2" value="یکشنبه"> یکشنبه<br>
+            </div>
+            <!-- Question 3 -->
+            <div class="question">
+                <label>۳. دو نفر در یک مسابقه شرکت می‌کنند. اگر نفر اول همیشه نفر دوم را دوبار شکست دهد، در ۱۰ مسابقه، نفر دوم چند بار برنده خواهد شد؟</label>
+                <input type="radio" name="q3" value="0"> ۰<br>
+                <input type="radio" name="q3" value="1"> ۱<br>
+                <input type="radio" name="q3" value="2"> ۲<br>
+                <input type="radio" name="q3" value="5"> ۵<br>
+            </div>
+            <!-- Question 4 -->
+            <div class="question">
+                <label>۴. عدد بعدی در دنباله زیر چیست؟ ۸، ۲۴، ۱۲، ۳۶، ۱۸، ...</label>
+                <input type="radio" name="q4" value="48"> ۴۸<br>
+                <input type="radio" name="q4" value="54"> ۵۴<br>
+                <input type="radio" name="q4" value="60"> ۶۰<br>
+                <input type="radio" name="q4" value="72"> ۷۲<br>
+            </div>
+            <!-- Question 5 -->
+            <div class="question">
+                <label>۵. تعداد خطوط متقاطع در یک شکل ۶ ضلعی منظم چند عدد است؟</label>
+                <input type="radio" name="q5" value="6"> ۶<br>
+                <input type="radio" name="q5" value="7"> ۷<br>
+                <input type="radio" name="q5" value="9"> ۹<br>
+                <input type="radio" name="q5" value="10"> ۱۰<br>
+            </div>
+            <!-- Add remaining questions in similar format -->
+
+<!-- Question 6 -->
+<div class="question">
+    <label>۶. کدام کشور با حرف “آ” شروع می‌شود؟</label>
+    <input type="radio" name="q6" value="آرژانتین"> آرژانتین<br>
+    <input type="radio" name="q6" value="آلمان"> آلمان<br>
+    <input type="radio" name="q6" value="آذربایجان"> آذربایجان<br>
+    <input type="radio" name="q6" value="آمریکا"> آمریکا<br>
+</div>
+
+<!-- Question 7 -->
+<div class="question">
+    <label>۷. اگر در یک تیم فوتبال ۱۱ نفر بازی کنند و ۲ نفر اخراج شوند، چند بازیکن باقی می‌ماند؟</label>
+    <input type="radio" name="q7" value="۹"> ۹<br>
+    <input type="radio" name="q7" value="۱۰"> ۱۰<br>
+    <input type="radio" name="q7" value="۸"> ۸<br>
+    <input type="radio" name="q7" value="۷"> ۷<br>
+</div>
+
+<!-- Question 8 -->
+<div class="question">
+    <label>۸. کدام عدد در دنباله‌ی فیبوناچی نمی‌آید؟</label>
+    <input type="radio" name="q8" value="۵"> ۵<br>
+    <input type="radio" name="q8" value="۱۳"> ۱۳<br>
+    <input type="radio" name="q8" value="۲۱"> ۲۱<br>
+    <input type="radio" name="q8" value="۲۵"> ۲۵<br>
+</div>
+
+<!-- Question 9 -->
+<div class="question">
+    <label>۹. یک لیتر آب چقدر وزن دارد؟</label>
+    <input type="radio" name="q9" value="۱۰۰۰ گرم"> ۱۰۰۰ گرم<br>
+    <input type="radio" name="q9" value="۹۰۰ گرم"> ۹۰۰ گرم<br>
+    <input type="radio" name="q9" value="۱۱۰۰ گرم"> ۱۱۰۰ گرم<br>
+    <input type="radio" name="q9" value="۸۰۰ گرم"> ۸۰۰ گرم<br>
+</div>
+
+<!-- Question 10 -->
+<div class="question">
+    <label>۱۰. عدد بعدی در دنباله ۱، ۳، ۶، ۱۰، ... چیست؟</label>
+    <input type="radio" name="q10" value="۱۲"> ۱۲<br>
+    <input type="radio" name="q10" value="۱۵"> ۱۵<br>
+    <input type="radio" name="q10" value="۱۴"> ۱۴<br>
+    <input type="radio" name="q10" value="۱۱"> ۱۱<br>
+</div>
+
+<!-- Question 11 -->
+<div class="question">
+    <label>۱۱. اگر علی ۵ سیب بخرد و ۳ سیب دیگر به او داده شود، چند سیب دارد؟</label>
+    <input type="radio" name="q11" value="۷"> ۷<br>
+    <input type="radio" name="q11" value="۸"> ۸<br>
+    <input type="radio" name="q11" value="۶"> ۶<br>
+    <input type="radio" name="q11" value="۹"> ۹<br>
+</div>
+
+<!-- Question 12 -->
+<div class="question">
+    <label>۱۲. کوچکترین عدد اول کدام است؟</label>
+    <input type="radio" name="q12" value="۱"> ۱<br>
+    <input type="radio" name="q12" value="۲"> ۲<br>
+    <input type="radio" name="q12" value="۳"> ۳<br>
+    <input type="radio" name="q12" value="۴"> ۴<br>
+</div>
+
+<!-- Question 13 -->
+<div class="question">
+    <label>۱۳. چه تعداد ساعت در ۳ روز وجود دارد؟</label>
+    <input type="radio" name="q13" value="۶۰"> ۶۰<br>
+    <input type="radio" name="q13" value="۴۸"> ۴۸<br>
+    <input type="radio" name="q13" value="۷۲"> ۷۲<br>
+    <input type="radio" name="q13" value="۷۰"> ۷۰<br>
+</div>
+
+<!-- Question 14 -->
+<div class="question">
+    <label>۱۴. عدد بعدی در دنباله ۲، ۴، ۸، ۱۶، ... چیست؟</label>
+    <input type="radio" name="q14" value="۳۲"> ۳۲<br>
+    <input type="radio" name="q14" value="۲۸"> ۲۸<br>
+    <input type="radio" name="q14" value="۳۵"> ۳۵<br>
+    <input type="radio" name="q14" value="۳۰"> ۳۰<br>
+</div>
+
+<!-- Question 15 -->
+<div class="question">
+    <label>۱۵. ۵۰٪ از ۲۰۰ چند می‌شود؟</label>
+    <input type="radio" name="q15" value="۱۰۰"> ۱۰۰<br>
+    <input type="radio" name="q15" value="۸۰"> ۸۰<br>
+    <input type="radio" name="q15" value="۱۲۰"> ۱۲۰<br>
+    <input type="radio" name="q15" value="۹۰"> ۹۰<br>
+</div>
+
+<!-- Question 16 -->
+<div class="question">
+    <label>۱۶. زاویه قائمه چند درجه است؟</label>
+    <input type="radio" name="q16" value="۴۵"> ۴۵<br>
+    <input type="radio" name="q16" value="۹۰"> ۹۰<br>
+    <input type="radio" name="q16" value="۱۸۰"> ۱۸۰<br>
+    <input type="radio" name="q16" value="۶۰"> ۶۰<br>
+</div>
+
+<!-- Question 17 -->
+<div class="question">
+    <label>۱۷. اگر طول یک مستطیل ۵ باشد و عرض آن ۳، محیط آن چند است؟</label>
+    <input type="radio" name="q17" value="۱۶"> ۱۶<br>
+    <input type="radio" name="q17" value="۱۵"> ۱۵<br>
+    <input type="radio" name="q17" value="۱۴"> ۱۴<br>
+    <input type="radio" name="q17" value="۱۰"> ۱۰<br>
+</div>
+
+<!-- Question 18 -->
+<div class="question">
+    <label>۱۸. کدام حیوان سریعتر است؟</label>
+    <input type="radio" name="q18" value="یوزپلنگ"> یوزپلنگ<br>
+    <input type="radio" name="q18" value="اسب"> اسب<br>
+    <input type="radio" name="q18" value="سگ"> سگ<br>
+    <input type="radio" name="q18" value="فیل"> فیل<br>
+</div>
+
+<!-- Question 19 -->
+<div class="question">
+    <label>۱۹. اگر یک هفته ۷ روز داشته باشد، چند هفته در ۳۵ روز وجود دارد؟</label>
+    <input type="radio" name="q19" value="۵"> ۵<br>
+    <input type="radio" name="q19" value="۶"> ۶<br>
+    <input type="radio" name="q19" value="۴"> ۴<br>
+    <input type="radio" name="q19" value="۳"> ۳<br>
+</div>
+
+<!-- Question 20 -->
+<div class="question">
+    <label>۲۰. عدد بعدی در دنباله ۱، ۱، ۲، ۳، ۵، ... چیست؟</label>
+    <input type="radio" name="q20" value="۶"> ۶<br>
+    <input type="radio" name="q20" value="۷"> ۷<br>
+    <input type="radio" name="q20" value="۸"> ۸<br>
+    <input type="radio" name="q20" value="۹"> ۹<br>
+</div>
+
+            <button type="submit" class="submit-btn">ارسال</button>
+        </form>
+    </div>
+</body>
+</html>

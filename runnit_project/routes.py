@@ -7,7 +7,7 @@ from .forms import PostForm,CourseForm,PhoneNumberForm,VerificationForm,ResumeUp
 from itsdangerous import URLSafeTimedSerializer
 from . import app,db,TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN,TWILIO_PHONE_NUMBER
 from . import DEFAULT_IMAGE_PATH_FOR_COURSE,DEFAULT_IMAGE_PATH_FOR_POST,DEFAULT_IMAGE_PATH_FOR_USER,DEFAULT_PATH_FOR_RESUME
-from .models import User,Post,Superuser,Admin,Course,Resume,Comment,Participant
+from .models import User,Post,Superuser,Admin,Course,Resume,Comment,Participant,IQTest
 from werkzeug.utils import secure_filename
 from twilio.rest import Client
 import random
@@ -92,6 +92,7 @@ def login () :
 
             if user.verify_password(password):
                 print("Password matched")  # Debugging
+                session.permanent = True  # Use permanent sessions to apply lifetime
                 session['user_id'] = user.user_id  # Store user_id in session
                 session['user'] = user.firstname
                 user.set_auth_true()
@@ -131,6 +132,7 @@ def signup() :
         db.session.add(new_user)
         db.session.commit()
         
+        session.permanent = True  # Use permanent sessions to apply lifetime
         session["user"] = new_user.firstname
         session["user_id"] = new_user.user_id
 
@@ -477,73 +479,51 @@ def enroll_course(course_id):
     user = User.query.get(user_id)  
 
     if not user.resume:
-        flash("You must upload a resume to enroll in this course.")
+        flash( "ابتدا رزموه خود را در پروفایل آپلود کنید سپس درخواست دهید")
         return redirect(url_for("upload_resume"))
     elif not user.resume.approved:
-        user.resume_approved = 1
-        flash("Your resume is pending approval. Please wait for the admin to review.")
+        flash("رزومه شما در حال بررسی است  در صورت تایید به شما از طریق ایمیل اطلاع رسانی میشود")
         return redirect(url_for("course_detail",course_id=course_id))
 
+    if not user.iqtest_score:
+        flash("ابتدا در آزمون شرکت کنید تا نمره شما محاسبه شود  سپس درخواست دهید")
+        return redirect(url_for('user_account'))
+    
     # # If resume is approved, proceed with enrollment
     # course.users.append(user)  # Assuming a relationship between users and courses
     # db.session.commit()
     # flash("You have successfully enrolled in the course!")
     # return redirect(url_for("course_detail", course_id=course.id))
 
+    resume = Resume.query.filter_by(user_id = user_id).first()
+    if resume.course_id is not None:
+        flash("رزومه شما درحال بررسی است درصوت تایید به شما از طریق ایمیل یا تماس تلفنی اطلاع داده میشود")
+        return redirect(url_for("course_detail",course_id=course_id)) 
+    elif resume.course_id is None:
+        resume.course_id = course_id
+        db.session.commit()
+        flash("شما با موفقیت درخواست خود را ثبت کرده اید , یعد از بررسی رزومه نتیجه به شما اطلاع داده میشود", "success")
+        return redirect(url_for("course_detail", course_id=course_id))
 
+    if user.resume_approved == "D" :
+        flash("متاسفانه رزومه شما پیرفته نشده است. به امید همکاری در فرصت های آینده")
+        return redirect(url_for("course_detail",course_id=course_id))
     # Check if the user is already enrolled
     existing_participant = Participant.query.filter_by(user_id=session.get("user_id"), course_id=course_id).first()
     if existing_participant:
         flash("You are already enrolled in this course.", "info")
         return redirect(url_for("course_detail", course_id=course_id))
 
-    resume = Resume.query.filter_by(user_id = user_id)
-    if resume is not None :
-        pass
-    else :
-        flash("first you need to upload a resume in your profile")
-        return redirect(url_for('resume_submit'))
-    # Enroll the user as a participant
-    participant = Participant(user_id=session.get("user_id"), course_id=course_id)
-    db.session.add(participant)
-    db.session.commit()
 
-    flash("Successfully enrolled in the course!", "success")
+
+    flash("شما با موفقیت درخواست خود را ثبت کرده اید , یعد از بررسی رزومه نتیجه به شما اطلاع داده میشود", "success")
     return redirect(url_for("course_detail", course_id=course_id))
-
-
-# @app.route("/resume_upload", methods=['POST','GET'])
-# @login_required
-# def resume_submit():
-
-#     if request.method == "POST" :
-
-#         file = request.files['resume']
-        
-#         # Check if the file is valid
-#         if file.filename == '':
-#             return 'No selected file', 400
-        
-#         # Save the file
-#         if file and file.filename.endswith('.pdf'):
-#             filepath = os.path.join(DEFAULT_IMAGE_PATH_FOR_RESUME, file.filename)
-#             file.save(filepath)
-#             resume = Resume(user_id = session['user_id'],body = filepath)
-
-#             db.session.add(resume)
-#             db.session.commit()
-
-#             flash("رزومه شما با موفقیت آپلود شد")
-#             return redirect(url_for('home'))
-#         return 'File is not a PDF', 400
-
-
-#     return render_template("upload_resume.html")
 
 
 @app.route("/upload_resume", methods=["GET", "POST"])
 @login_required
 def upload_resume():
+    user = User.query.filter_by(user_id = session.get("user_id"))
     form = ResumeUploadForm()
     if form.validate_on_submit():
         resume_file = form.resume.data
@@ -557,13 +537,16 @@ def upload_resume():
 
         # Check if a resume already exists and update it, or create a new one
         existing_resume = Resume.query.filter_by(user_id=session.get("user_id")).first()
-        if existing_resume:
+        if existing_resume :
+            if existing_resume.approved == "A" :
+                flash("رزومه شما قبلا مورد تایید قرار گرفته و نیازی  به آپلود رزمه جدید ندارید")
+                return redirect(url_for('user_account'))
+
             existing_resume.file_path = filename
-            existing_resume.approved = False  # Reset approval status on new upload
+            existing_resume.approved = "P"  # Reset approval status on new upload
         else:
-            user = User.query.filter_by(user_id = session.get("user_id"))
             user.resume = resume_path
-            new_resume = Resume(file_path=filename, approved=False, user_id=session.get("user_id"))
+            new_resume = Resume(file_path=filename, approved="P", user_id=session.get("user_id"))
             db.session.add(new_resume)
 
         db.session.commit()
@@ -579,7 +562,8 @@ def close_course(course_id):
     course = Course.query.filter_by(course_id = course_id)
     course.closed  = True
     db.session.commit()
-
+    flash("دوره با موفقیت بسته شد")
+    return redirect(url_for('admin_panel'))
 
 @app.route("/open-course/<int:course_id>")
 @admin_required
@@ -589,13 +573,16 @@ def open_course(course_id):
     course = Course.query.filter_by(course_id = course_id)
     course.closed  = False
     db.session.commit()
+    flash("دوره با موفقیت باز شد")
+    return redirect(url_for('admin_panel'))
 
 
 @app.route('/course/<int:course_id>/resumes')
 def view_course_resumes(course_id):
     # Get the course and associated resumes
+
     course = Course.query.get_or_404(course_id)
-    resumes = Resume.query.filter_by(course_id=course_id,approved=False).all()  # Assuming course_id exists in Resume
+    resumes = Resume.query.filter_by(course_id=course_id,approved="P").all()  # Assuming course_id exists in Resume
 
     return render_template('view_course_resumes.html', course=course, resumes=resumes)
 
@@ -604,12 +591,16 @@ def view_course_resumes(course_id):
 #     pending_resumes = Resume.query.filter_by(approved=False).all()
 #     return render_template("admin/review_resumes.html", pending_resumes=pending_resumes)
 
-@app.route("/admin/approve_resume/<int:resume_id>", methods=["POST"])
-def approve_resume(resume_id):
+
+@app.route("/admin/approve_resume/<int:resume_id>/<int:course_id>", methods=["POST"])
+def approve_resume(resume_id,course_id):
     resume = Resume.query.get_or_404(resume_id)
     user = User.query.filter_by( user_id = resume.user_id)
     user.resume_approved = "A"
-    resume.approved = True
+    resume.approved = "A"
+    participant = Participant(user_id=session.get("user_id"), course_id=course_id)
+    db.session.add(participant)
+    db.session.commit()
     db.session.commit()
     send_course_approved_email(user.email)
     flash("Resume approved successfully.")
@@ -621,8 +612,55 @@ def reject_resume(resume_id):
     user = User.query.filter_by( user_id = resume.user_id)
     send_course_declined_email(user.email)
     user.resume_approved = "D"
-    resume.approved = False
+    resume.approved = "D"
     # db.session.delete(resume)  # Remove the resume if rejected
-    # db.session.commit()
+    db.session.commit()
     flash("Resume rejected and removed.")
     return redirect(url_for("review_resumes"))
+
+
+@app.route('/submit_iq_test', methods=['POST','GET'])
+@login_required
+def submit_iq_test():
+    user = User.query.filter_by(user_id =session.get("user_id")).first()
+    if request.method == "POST" :
+        # Define the correct answers for each question
+        correct_answers = {
+            "q1": "30",
+            "q2": "یکشنبه",
+            "q3": "0",
+            "q4": "54",
+            "q5": "9",
+            "q6": "آلمان",
+            "q7": "22.5",
+            "q8": "7",
+            "q9": "10",
+            "q10": "5",
+            "q11": "75",
+            "q12": "15",
+            "q13": "8",
+            "q14": "2",
+            "q15": "4",
+            "q16": "4",
+            "q17": "360",
+            "q18": "52",
+            "q19": "49",
+            "q20": "8"
+        }
+        # Retrieve user responses
+        user_answers = request.form.to_dict()
+        
+        # Calculate the score
+        score = 0
+        for question, correct_answer in correct_answers.items():
+            if question in user_answers and user_answers[question].strip() == correct_answer:
+                score += 1
+        iqtest = IQTest(user_id = user.user_id , test_result = score)
+        user.iqtest_score = score
+        db.session.add(iqtest)
+        db.session.commit()
+        flash("نمره شما در آزمون ثبت شد")
+        # Redirect to home with score (adjust as necessary for your home view)
+        return redirect(url_for('user_account'))
+    else :
+        return render_template("IQtest.html")
