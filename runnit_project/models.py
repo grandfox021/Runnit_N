@@ -147,38 +147,39 @@ class Comment(db.Model):
         return f'<Comment {self.body[:20]}>'
 
 # Intern inherits User
-class Intern(User):
-    def __init__(self, firstname, lastname, email, password, **kwargs):
-        # Call the parent class (User) __init__ method to set base attributes
-        super().__init__(firstname=firstname, lastname=lastname, email=email, password=password, **kwargs)
+# class Intern(User):
+#     def __init__(self, firstname, lastname, email, password, **kwargs):
+#         # Call the parent class (User) __init__ method to set base attributes
+#         super().__init__(firstname=firstname, lastname=lastname, email=email, password=password, **kwargs)
 
-    MBTI_test_grade = db.Column(db.String(100))
-    IQ_test_grade = db.Column(db.Integer)
-    course_exam_grade = db.Column(db.String(100))
-    average_grade = db.Column(db.Float)
+#     MBTI_test_grade = db.Column(db.String(100))
+#     IQ_test_grade = db.Column(db.Integer)
+#     course_exam_grade = db.Column(db.String(100))
+#     average_grade = db.Column(db.Float)
 
-    def submit_resume(self, resume):
-        db.session.add(resume)
-        db.session.commit()
+#     def submit_resume(self, resume):
+#         db.session.add(resume)
+#         db.session.commit()
 
-    def submit_mbti_test(self, mbti_test):
-        db.session.add(mbti_test)
-        db.session.commit()
+#     def submit_mbti_test(self, mbti_test):
+#         db.session.add(mbti_test)
+#         db.session.commit()
 
-    def submit_iq_test(self, iq_test):
-        db.session.add(iq_test)
-        db.session.commit()
+#     def submit_iq_test(self, iq_test):
+#         db.session.add(iq_test)
+#         db.session.commit()
 
 
 
 class Resume(db.Model):
     resume_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'), nullable=True)
     file_path = db.Column(db.String(150), nullable=False)  # Path to the resume file
     approved = db.Column(SQLAEnum(ResumeStatus), nullable=True)   
     description = db.Column(db.Text, nullable=True)
-    profile_image = db.Column(db.String(200))
-    skill = db.Column(db.String(200))
+    profile_image = db.Column(db.String(200),nullable=True)
+    skill = db.Column(db.String(200),nullable=True)
     user = db.relationship("User", back_populates="resume")
     def verify_format_pdf(self):
         pass

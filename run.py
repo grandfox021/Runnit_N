@@ -1,10 +1,10 @@
 from runnit_project import app,db
 from runnit_project.models import Superuser,Admin
 from flask import session
+from runnit_project import DEFAULT_IMAGE_PATH_FOR_USER
 
 
-
-def create_superuser(firstname, lastname, email, password):
+def create_superuser(firstname, lastname, email, password,profile_pic):
     with app.app_context():  # Make sure you're working within the Flask app context
         # Check if superuser already exists
         existing_user = Superuser.query.filter_by(email=email).first()
@@ -17,7 +17,8 @@ def create_superuser(firstname, lastname, email, password):
             firstname=firstname,
             lastname=lastname,
             email=email,
-            password=password
+            password=password,
+            profile_pic = profile_pic
         )
 
         db.session.add(superuser)
@@ -26,7 +27,7 @@ def create_superuser(firstname, lastname, email, password):
 
 
 
-def create_admin(firstname, lastname, email, password):
+def create_admin(firstname, lastname, email, password,profile_pic):
     with app.app_context():  # Make sure you're working within the Flask app context
         # Check if Admin already exists
         existing_user = Admin.query.filter_by(email=email).first()
@@ -39,7 +40,8 @@ def create_admin(firstname, lastname, email, password):
             firstname=firstname,
             lastname=lastname,
             email=email,
-            password=password
+            password=password,
+            profile_pic = profile_pic
         )
 
         db.session.add(admin)
@@ -65,7 +67,8 @@ def create_initials():
         firstname="hassan",
         lastname="bouzarpour",
         email="hbtk320@gmail.com",
-        password="ha001"
+        password="ha001",
+        profile_pic = DEFAULT_IMAGE_PATH_FOR_USER
         )
 
 
@@ -73,7 +76,8 @@ def create_initials():
         firstname="melika",
         lastname="ebrahimi",
         email="melika@example.com",
-        password="me001"
+        password="me001",
+        profile_pic = DEFAULT_IMAGE_PATH_FOR_USER
         )
 
         initialization_done = True

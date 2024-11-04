@@ -43,15 +43,15 @@
             </thead>
             <tbody>
                 {% for resume in resumes %}
-                    <tr>
-                        <td>{{ resume.user.name }}</td>
-                        <td>{{ resume.iq_score }}</td>
-                        <td>{{ resume.status }}</td>
+
+                        <td>{{ resume.user.firstname }} {{resume.user.lastname }}</td>
+                        <td>{{ resume.user.iqtest_score }}</td>
+                        <td><a href="{{ url_for('static', filename='resume_uploads/'+ resume.file_path).replace('\\', '/') }}" target="_blank">Open PDF in New Tab</a></td>
                         <td>
-                            <form action="{{ url_for('accept_resume', resume_id=resume.id) }}" method="post" style="display:inline;">
+                            <form action="{{ url_for('approve_resume', resume_id=resume.resume_id , course_id = course.course_id) }}" method="post" style="display:inline;">
                                 <button type="submit" class="btn btn-accept btn-sm">Accept</button>
                             </form>
-                            <form action="{{ url_for('reject_resume', resume_id=resume.id) }}" method="post" style="display:inline;">
+                            <form action="{{ url_for('reject_resume', resume_id=resume.resume_id) }}" method="post" style="display:inline;">
                                 <button type="submit" class="btn btn-reject btn-sm">Reject</button>
                             </form>
                         </td>

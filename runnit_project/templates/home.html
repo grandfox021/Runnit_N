@@ -3,6 +3,19 @@
 {% block content %}
 <div class="container">
     <div class="row">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="custom-alert">
+            <ul class="flashes">
+                {% for message in messages %}
+                <li style="color:red;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+    
         اسلایدر
 
         
