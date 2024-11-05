@@ -729,3 +729,6 @@ def delet_participants(participant_id):
 
     flash("شرکت کننده از دوره حذف شد")
     return redirect(url_for('view_course_participants',course_id = course_id))
+
+@app.route("")
+def delet_post()
