@@ -245,28 +245,6 @@ def reset_with_token(token):
 
 
 
-
-# Define superuser details here
-
-# @app.route("/create_post", methods=["POST", "GET"])
-# @admin_required
-# def create_post():
-#     if request.method == "POST":
-#         title = request.form['title']
-#         body = request.form['body']
-#         image = request.form.get('image', None)
-        
-#         # Assuming the admin is submitting the post
-#         post = Post(title=title, body=body, image=image, user_id=session['user_id'])
-#         db.session.add(post)
-#         db.session.commit()
-
-#         flash("Post successfully created!", "success")
-#         return redirect(url_for('home'))
-    
-#     return render_template("create_post.html")
-
-
 @app.route("/create_post", methods=["GET", "POST"])
 @admin_required
 @login_required
@@ -580,7 +558,7 @@ def open_course(course_id):
     return redirect(url_for('admin_panel'))
 
 
-@app.route('/course/<int:course_id>/resumes')
+@app.route('/course/<int:course_id>/resumes',methods=["POST","GET"])
 def view_course_resumes(course_id):
     # Get the course and associated resumes
 
@@ -595,10 +573,10 @@ def view_course_resumes(course_id):
 #     return render_template("admin/review_resumes.html", pending_resumes=pending_resumes)
 
 
-@app.route("/admin/approve_resume/<int:resume_id>/<int:course_id>", methods=["POST"])
+@app.route("/admin/approve_resume/<int:resume_id>/<int:course_id>", methods=["POST","GET"])
 def approve_resume(resume_id,course_id):
     resume = Resume.query.get_or_404(resume_id)
-    user = User.query.filter_by( user_id = resume.user_id)
+    user = User.query.filter_by( user_id = resume.user_id).first()
     user.resume_approved = "A"
     resume.approved = "A"
     participant = Participant(user_id=session.get("user_id"), course_id=course_id)
@@ -609,16 +587,16 @@ def approve_resume(resume_id,course_id):
     flash("Resume approved successfully.")
     return redirect(url_for("review_resumes"))
 
-@app.route("/admin/reject_resume/<int:resume_id>", methods=["POST"])
+@app.route("/admin/reject_resume/<int:resume_id>", methods=["POST","GET"])
 def reject_resume(resume_id):
     resume = Resume.query.get_or_404(resume_id)
-    user = User.query.filter_by( user_id = resume.user_id)
+    user = User.query.filter_by( user_id = resume.user_id).first()
     send_course_declined_email(user.email)
     user.resume_approved = "D"
     resume.approved = "D"
     # db.session.delete(resume)  # Remove the resume if rejected
     db.session.commit()
-    flash("Resume rejected and removed.")
+    flash("Resume rejected.")
     return redirect(url_for("review_resumes"))
 
 
@@ -667,3 +645,32 @@ def submit_iq_test():
         return redirect(url_for('user_account'))
     else :
         return render_template("IQtest.html")
+
+
+@app.route("/course-participants/<int:course_id>")
+@admin_required
+@login_required
+def view_course_participants(course_id):
+
+
+    participants =Participant.query.filter_by(course_id = course_id)
+
+
+    return render_template("course_participants.html",participants = participants)
+
+
+
+@app.route("/course-participants/<int:participant_id>", methods=['POST','GET'])
+@admin_required
+@login_required
+def delet_participants(participant_id):
+
+
+
+    participant  = Participant.query.filter_by(id =participant_id ).first()
+    course_id = participant.course_id
+    db.session.delete(participant)
+    db.session.commit()
+
+    flash("شرکت کننده از دوره حذف شد")
+    return redirect(url_for('view_course_participants',course_id = course_id))
