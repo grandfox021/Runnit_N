@@ -10,111 +10,188 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Vazir', sans-serif;
             direction: rtl;
+            background-color: #f2f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .comment-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 40px auto;
         }
 
         .comment {
-            background-image: linear-gradient(270deg, #64B5F6, #BBDEFB 23.78%, #64B5F6 49.83%, #BBDEFB 72.74%, #64B5F6);            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 80px ;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+            position: relative;
         }
 
-        .comment1 {
-            background-image: linear-gradient(270deg, #FF7043, #FFCC80 23.78%, #FF7043 49.83%, #FFCC80 72.74%, #FF7043);            border-radius: 5px;
-            padding: 10px;
-            margin: 80px;
+        .comment:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .comment2 {
-            background-image: linear-gradient(270deg, #F06292, #f48fb1e8 23.78%, #F06292 49.83%, #f48fb1f5 72.74%, #F06292);            border-radius: 5px;
-            padding: 10px;
-            margin: 80px;
+        .comment:nth-child(1) {
+            border-top-color: #64B5F6;
+        }
+
+        .comment:nth-child(2) {
+            border-top-color: #FF7043;
+        }
+
+        .comment:nth-child(3) {
+            border-top-color: #F06292;
         }
 
         .profile {
             display: flex;
             align-items: center;
+            margin-bottom: 15px;
         }
 
         .profile img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            margin-right: 10px;
+            margin-left: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .profile-info {
+        .profile-info p {
+            margin: 0;
             font-size: 14px;
         }
 
+        .profile-info .name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .profile-info .email {
+            color: #777;
+        }
+
         .resume {
-            font-size: 16px;
-            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0 15px;
+            line-height: 1.4;
         }
 
         .comment-text {
-            font-size: 18px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            position: relative;
+        }
+
+        .comment-text::before {
+            content: "“";
+            font-size: 40px;
+            color: #ddd;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+        }
+        
+        .comment-text::after {
+            content: "”";
+            font-size: 40px;
+            color: #ddd;
+            position: absolute;
+            bottom: -20px;
+            right: 10px;
+        }
+
+        .comment-footer {
+            text-align: right;
             margin-top: 10px;
+        }
+
+        .comment-footer a {
+            text-decoration: none;
+            font-size: 14px;
+            color: #64B5F6;
+            transition: color 0.3s;
+        }
+
+        .comment-footer a:hover {
+            color: #FF7043;
         }
     </style>
 </head>
 
 <body>
-    <div class="comment">
-        <div class="profile">
-            <img src="profile-image.jpg" alt="عکس پروفایل">
-            <div class="profile-info">
-                <p>نام کاربر: محمد</p>
-                <p>ایمیل: example@example.com</p>
+    <div class="comment-section">
+        <div class="comment">
+            <div class="profile">
+                <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل">
+                <div class="profile-info">
+                    <p class="name">محمد</p>
+                    <p class="email">example@example.com</p>
+                </div>
+            </div>
+            <div class="resume">
+                <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
+            </div>
+            <div class="comment-text">
+                <p>خواستم بگم بنده به عنوان کسی که تا حالا توی یک جمع به صورت حضوری برنامه نویسی رو یاد نگرفته واقعا تجربه جالبی داشتم...</p>
+            </div>
+            <div class="comment-footer">
+                <a href="#">مشاهده کامل نظر</a>
             </div>
         </div>
-        <div class="resume">
-            <p>سابقه کاری: برنامه نویس وب با بیش از 5 سال تجربه</p>
-        </div>
-        <div class="comment-text">
-            <p>خواستم بگم بنده به عنوان کسی که تا حالا توی یک جمع به صورت حضوری برنامه نویسی رو یاد نگرفته واقعا تجربه جالبی داشتم و از روند کلاس و چالش های ایجاد شده خیلی راضی بودم
-                خواستم اگر میشه در آینده جلسات
-                مخصوصا این جلسات اولیه مفاهيم به صورت سوال محور آموزش داده بشه
-                اگر هم بشه استاد بفرمایند ما در ساعات غیر از کلاس از چه منابعی مطالعه کنیم و برای تقویت بیشتر خودمون چه کارهایی لازمه
-                البته سوای تکالیف و تسک هایی که قرار میدن</p>
-        </div>
-    </div>
-    <div class="comment1">
-        <div class="profile">
-            <img src="profile-image.jpg" alt="عکس پروفایل">
-            <div class="profile-info">
-                <p>نام کاربر: محمد</p>
-                <p>ایمیل: example@example.com</p>
+
+        <div class="comment">
+            <div class="profile">
+                <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل">
+                <div class="profile-info">
+                    <p class="name">محمد</p>
+                    <p class="email">example@example.com</p>
+                </div>
+            </div>
+            <div class="resume">
+                <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
+            </div>
+            <div class="comment-text">
+                <p>جلسه دیروز خیلی خوب بود و از نظر من چند جلسه با کاغذ کار کنیم و درک بهتری از الگوریتم پیدا کنیم بهتره تا اینکه سریعاً بخواهیم بریم کد زدن با کامپیوتر...</p>
+            </div>
+            <div class="comment-footer">
+                <a href="#">مشاهده کامل نظر</a>
             </div>
         </div>
-        <div class="resume">
-            <p>سابقه کاری: برنامه نویس وب با بیش از 5 سال تجربه</p>
-        </div>
-        <div class="comment-text">
-            <p>جلسه دیروز خیلی خوب بود و از نظر من چند جلسه با کاغذ کار کنم و درک بهتری از الگوریتم پیدا کنیم بهتره تا اینکه سریعاً بخواهیم بریم کد زدن با کامپیوتر، چون اکثرا با کامپیوتر کد نویسی کردیم.</p>
-        </div>
-    </div>
-    <div class="comment2">
-        <div class="profile">
-            <img src="profile-image.jpg" alt="عکس پروفایل">
-            <div class="profile-info">
-                <p>نام کاربر: محمد</p>
-                <p>ایمیل: example@example.com</p>
+
+        <div class="comment">
+            <div class="profile">
+                <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل">
+                <div class="profile-info">
+                    <p class="name">محمد</p>
+                    <p class="email">example@example.com</p>
+                </div>
             </div>
-        </div>
-        <div class="resume">
-            <p>سابقه کاری: برنامه نویس وب با بیش از 5 سال تجربه</p>
-        </div>
-        <div class="comment-text">
-            <p>کلاس دیروز عالی بود ،
-                من این رویکرد چالشی و حل‌ مسئله استاد رو برای جلسه اول دوس داشتم و اینکه تاکید به مشارکت همه داشتن و این خب تا یه حدی آدمو مجبور به مشارکت میکرد ولی علاقه دارم که بیشتر و بیشتر تجربه ها و نکته هایی که از نظرشون مهم هست رو با ما به اشتراک بذارن</p>
+            <div class="resume">
+                <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
+            </div>
+            <div class="comment-text">
+                <p>کلاس دیروز عالی بود، من این رویکرد چالشی و حل‌ مسئله استاد رو برای جلسه اول دوست داشتم...</p>
+            </div>
+            <div class="comment-footer">
+                <a href="#">مشاهده کامل نظر</a>
+            </div>
         </div>
     </div>
 </body>
 
-
 {% endblock %}
-
-

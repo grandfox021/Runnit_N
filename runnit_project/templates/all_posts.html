@@ -1,71 +1,146 @@
 {% extends './shared/base.html' %}
+{% block title %}جدیدترین مطالب{% endblock %}
 
 {% block content %}
-
-
-<!-- Latest post Section -->
-<!-- Latest post Section -->
-
-<!-- Latest post Section -->
-<section class="tm-latest-post">
+<section class="tm-latest-post py-5">
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="tm-section-title mb-4">{{ translations['latest_posts'] }}</h2>
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="tm-section-title mb-3">لیست آخرین پست‌ها</h2>
+                <p class="tm-section-subtitle text-muted">آخرین مقالات و مطالب آموزشی</p>
+                <div class="divider my-4"></div>
             </div>
         </div>
+        
         <div class="row">
             {% for post in posts %}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="text-decoration-none text-dark">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-img-container">
+            <div class="col-lg-4 col-md-6 mb-5">
+                <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden hover-card">
+                    <a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="text-decoration-none text-dark">
+                        <div class="card-img-container position-relative">
                             <img src="{{ url_for('static', filename=post.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" 
                                  class="card-img-top" 
                                  alt="post image">
+                            <div class="card-img-overlay d-flex align-items-end p-3">
+                                <span class="badge bg-primary p-2 shadow">جدید</span>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ post.title }}</h5>
-                            <p class="card-text text-muted">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold">{{ post.title }}</h5>
+                            <p class="card-text text-muted small mb-1">
                                 {{ translations['sent_by'] }} <strong>{{ post.user.firstname }} {{ post.user.lastname }}</strong>
                             </p>
-                            <p class="card-text limited-text">{{ post.body }}</p>
+                            <p class="card-text limited-text mb-3">{{ post.body }}</p>
                         </div>
-                        <div class="text-center mt-4">
-                            <a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="btn btn-info">مشاهده جزئیات</a>
-                        </div>
+                    </a>
+                    <div class="text-center mb-4">
+                        <a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="btn btn-custom w-75 rounded-pill">مشاهده جزئیات</a>
                     </div>
-                </a>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Additional CSS for Image and Text Styling -->
 <style>
-
+    /* Styling for Section */
+    .tm-latest-post {
+        background-color: #f3f4f6; /* Light background for contrast */
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+    .tm-section-title {
+        font-weight: 700;
+        color: #5e4b8c; /* رنگ بنفش */
+        font-size: 2.5rem; /* اندازه متن عنوان */
+        letter-spacing: 0.05rem; /* فاصله بین حروف */
+        animation: fadeIn 1s ease; /* انیمیشن محو شدن */
+    }
+    .tm-section-subtitle {
+        font-size: 1.2rem; /* اندازه زیرعنوان */
+        color: #666; /* رنگ متن زیرعنوان */
+    }
+    .divider {
+        width: 80px; /* عرض خط تقسیم */
+        height: 4px; /* ارتفاع خط تقسیم */
+        background-color: #5e4b8c; /* رنگ خط تقسیم */
+        margin: 0 auto; /* تراز کردن خط در وسط */
+        border-radius: 2px; /* لبه‌های گرد */
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 15px;
+    }
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
     .card-img-container {
-        height: 200px; /* Set a fixed height for uniformity */
+        height: 220px;
         overflow: hidden;
+        border-bottom: 3px solid #5e4b8c; /* رنگ بنفش */
+        position: relative;
     }
     .card-img-container img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Ensures images fill the container while maintaining aspect ratio */
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .card:hover .card-img-container img {
+        transform: scale(1.05);
+    }
+    .card-img-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        text-align: left;
+        padding: 1rem;
+        transition: opacity 0.3s ease;
+        opacity: 0;
+    }
+    .card:hover .card-img-overlay {
+        opacity: 1;
+    }
+    .card-body {
+        padding: 1.5rem;
+        background-color: #ffffff;
     }
     .limited-text {
         display: -webkit-box;
-        -webkit-line-clamp: 3; /* Limits to 3 lines */
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis; /* Adds ellipsis (…) after truncated text */
-        max-height: 4.5em; /* Controls height to ensure text limit */
+        text-overflow: ellipsis;
+        color: #555;
+        max-height: 4.5em;
+    }
+    .btn-custom {
+        color: #fff;
+        background-color: #5e4b8c; /* رنگ بنفش */
+        border: none;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.2s ease;
+    }
+    .btn-custom:hover {
+        background-color: #452b5b; /* رنگ بنفش تیره‌تر */
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0; /* شروع از حالت شفاف */
+            transform: translateY(-20px); /* حرکت به بالا */
+        }
+        to {
+            opacity: 1; /* پایان با حالت غیر شفاف */
+            transform: translateY(0); /* به حالت اصلی برمی‌گردد */
+        }
     }
 </style>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 {% endblock %}

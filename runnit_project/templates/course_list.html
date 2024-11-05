@@ -1,62 +1,130 @@
 {% extends './shared/base.html' %}
 
-{% block title %}لیست دوره ها{% endblock %}
+{% block title %}لیست دوره‌ها{% endblock %}
 {% block content %}
 
-<div class="container">
-    <div class="row">   
-        {% for course in courses %}
-
-        <div class="col-md-4 mt-5">
-            <div class="card shadow-sm border-light">
-                <div class="card-header bg-info text-white fw-bold text-center">
-                    <h4 class="mb-0">آموزش برنامه نویسی</h4>
-                </div>
-                <div class="card-body">
-                    <a href="{{url_for('course_detail',course_id = course.course_id)}}" class="img-layer">
-                        <img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" class="card-img-top" alt="آموزش برنامه نویسی" style="border-radius: 10px;">
+<section class="course-list-section py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title mb-3">لیست دوره‌ها</h2>
+                <p class="section-subtitle text-muted">دوره‌های آموزشی معتبر و کاربردی</p>
+                <div class="divider my-4"></div>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for course in courses %}
+            <div class="col-lg-4 col-md-6 mb-5">
+                <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden hover-card">
+                    <a href="{{ url_for('course_detail', course_id=course.course_id) }}" class="text-decoration-none text-dark">
+                        <div class="card-img-container position-relative">
+                            <img src="{{ url_for('static', filename=course.image.replace('static/', '').replace('runnit_project/', '').replace('\\', '/')) }}" 
+                                 class="card-img-top" 
+                                 alt="course image">
+                            <div class="card-img-overlay d-flex align-items-end p-3">
+                                <span class="badge bg-primary shadow">جدید</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold">{{ course.title }}</h5>
+                            <p class="card-text limited-text mb-3 text-muted">{{ course.body }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">رایگان</span>
+                                <small class="text-muted">مدت زمان: {{ course.duration }}</small>
+                            </div>
+                        </div>
                     </a>
-                    <h5 class="card-title mt-3">جزئیات دوره</h5>
-                    <p class="card-text limited-text card-text text-muted">{{course.body}}</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="badge badge-success">رایگان</span>
-                        <i class="text-muted">مدت زمان: 1:52:32</i>
-                    </div>
-                    <div class="text-center mt-4">
-                        <a href="{{url_for('course_detail',course_id = course.course_id)}}" class="btn btn-info">مشاهده جزئیات</a>
+                    <div class="text-center mb-4">
+                        <a href="{{ url_for('course_detail', course_id=course.course_id) }}" class="btn btn-primary w-75 rounded-pill">مشاهده جزئیات</a>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-
-        {% endfor %}
-
-        
     </div>
-</div>
+</section>
 
-<!-- Additional CSS for Image and Text Styling -->
 <style>
-
+    /* Styling for Course List Section */
+    .course-list-section {
+        background-color: #f9f9fb; /* Lighter background for contrast */
+        padding: 3rem 0;
+    }
+    .section-title {
+        font-weight: 700;
+        color: #5e3c93; /* Main theme color */
+        font-size: 2.5rem; 
+        letter-spacing: 0.05rem;
+        animation: fadeIn 1s ease;
+    }
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: #666;
+    }
+    .divider {
+        width: 80px;
+        height: 4px;
+        background-color: #5e3c93; /* Main theme color */
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
     .card-img-container {
-        height: 200px; /* Set a fixed height for uniformity */
+        height: 220px;
         overflow: hidden;
+        border-bottom: 3px solid #5e3c93; /* Accent color */
     }
     .card-img-container img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Ensures images fill the container while maintaining aspect ratio */
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .card:hover .card-img-container img {
+        transform: scale(1.05);
+    }
+    .card-body {
+        padding: 1.5rem;
+        background-color: #ffffff;
     }
     .limited-text {
         display: -webkit-box;
-        -webkit-line-clamp: 3; /* Limits to 3 lines */
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis; /* Adds ellipsis (…) after truncated text */
-        max-height: 4.5em; /* Controls height to ensure text limit */
+        text-overflow: ellipsis;
+        color: #555;
+        max-height: 4.5em;
+    }
+    .btn-primary {
+        color: #fff;
+        background-color: #5e3c93; /* Main theme color */
+        border: none;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.2s ease;
+    }
+    .btn-primary:hover {
+        background-color: #4c2f7b; /* Darker shade for hover */
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
-
-
 
 {% endblock %}

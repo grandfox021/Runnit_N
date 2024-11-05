@@ -1,24 +1,119 @@
 {% extends './shared/base.html' %}
 
+{% block title %}خانه | Runit{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="row">
+<style>
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Arial', sans-serif;
+        color: #343a40;
+    }
+    .header-text {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5e4b8c; /* رنگ بنفش */
+    }
+    .sub-header {
+        font-size: 1.25rem;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 1rem;
+        border: none;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        background-color: #ffffff; /* پس‌زمینه سفید */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* سایه ملایم */
+    }
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .card-title {
+        color: #5e4b8c; /* رنگ بنفش */
+        font-size: 1.5rem;
+        margin-top: 15px;
+    }
+    .btn-custom {
+        background-color: #5e4b8c; /* رنگ بنفش */
+        color: white; /* رنگ متن سفید */
+        border: none;
+        border-radius: 0.5rem;
+        padding: 12px 25px;
+        font-size: 1rem;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .btn-custom:hover {
+        background-color: #452b5b; /* رنگ بنفش تیره‌تر */
+        transform: translateY(-2px);
+    }
+    .feature-icon {
+        font-size: 3rem;
+        color: #5e4b8c; /* رنگ بنفش */
+        margin-bottom: 15px;
+    }
+    .footer {
+        margin-top: 50px;
+        text-align: center;
+        color: #6c757d;
+    }
+    .divider {
+        height: 1px;
+        background-color: #dee2e6;
+        margin: 30px 0;
+    }
+</style>
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="custom-alert">
-            <ul class="flashes">
-                {% for message in messages %}
-                <li style="color:red;">{{ message }}</li>
-                {% endfor %}
-            </ul>
-            </div>
-        {% endif %}
-    {% endwith %}
+<div class="container my-5">
+    <h1 class="header-text">به Runit خوش آمدید</h1>
+    <p class="sub-header">اینجا جایی است که شما می‌توانید بهترین راه‌حل‌ها را برای مدیریت و پیگیری پروژه‌های خود پیدا کنید.</p>
     
-        اسلایدر
+    <div class="divider"></div>
 
-        
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <i class="fas fa-tasks feature-icon"></i>
+                    <h5 class="card-title">ویژگی ۱</h5>
+                    <p class="card-text">توضیحات مختصری درباره ویژگی ۱ که می‌تواند به کاربران کمک کند. این ویژگی به شما امکان می‌دهد تا پروژه‌ها را به راحتی مدیریت کنید.</p>
+                    <a href="#" class="btn btn-custom">بیشتر بدانید</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line feature-icon"></i>
+                    <h5 class="card-title">ویژگی ۲</h5>
+                    <p class="card-text">توضیحات مختصری درباره ویژگی ۲ که می‌تواند به کاربران کمک کند. این ویژگی به شما امکان تجزیه و تحلیل دقیق‌تری را می‌دهد.</p>
+                    <a href="#" class="btn btn-custom">بیشتر بدانید</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <i class="fas fa-cogs feature-icon"></i>
+                    <h5 class="card-title">ویژگی ۳</h5>
+                    <p class="card-text">توضیحات مختصری درباره ویژگی ۳ که می‌تواند به کاربران کمک کند. این ویژگی امکان سفارشی‌سازی عمیق‌تر را فراهم می‌کند.</p>
+                    <a href="#" class="btn btn-custom">بیشتر بدانید</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="divider"></div>
+
 </div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
