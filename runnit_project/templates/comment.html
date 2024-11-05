@@ -1,197 +1,247 @@
 {% extends './shared/base.html' %}
 
 {% block content %}
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>نظرات کاربران</title>
-    
     <style>
-        body {
-            font-family: 'Vazir', sans-serif;
-            direction: rtl;
-            background-color: #f2f4f8;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        .comment-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            max-width: 800px;
-            margin: 40px auto;
-        }
-
-        .comment {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            border-top: 5px solid;
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .comment:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .comment:nth-child(1) {
-            border-top-color: #64B5F6;
-        }
-
-        .comment:nth-child(2) {
-            border-top-color: #FF7043;
-        }
-
-        .comment:nth-child(3) {
-            border-top-color: #F06292;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .profile img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-left: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-info p {
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .profile-info .name {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .profile-info .email {
-            color: #777;
-        }
-
-        .resume {
-            font-size: 14px;
-            color: #666;
-            margin: 5px 0 15px;
-            line-height: 1.4;
-        }
-
-        .comment-text {
-            font-size: 15px;
-            line-height: 1.7;
-            color: #444;
-            position: relative;
-        }
-
-        .comment-text::before {
-            content: "“";
-            font-size: 40px;
-            color: #ddd;
-            position: absolute;
-            top: -20px;
-            left: 10px;
-        }
-        
-        .comment-text::after {
-            content: "”";
-            font-size: 40px;
-            color: #ddd;
-            position: absolute;
-            bottom: -20px;
-            right: 10px;
-        }
-
-        .comment-footer {
-            text-align: right;
-            margin-top: 10px;
-        }
-
-        .comment-footer a {
-            text-decoration: none;
-            font-size: 14px;
-            color: #64B5F6;
-            transition: color 0.3s;
-        }
-
-        .comment-footer a:hover {
-            color: #FF7043;
-        }
+      body {
+        font-family: 'Vazir', sans-serif;
+        direction: rtl;
+        background-color: #f2f4f8;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* Slider Styles */
+      .slider-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        overflow: hidden;
+      }
+      
+      .slider {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
+      
+      .slide {
+        min-width: 100%;
+        box-sizing: border-box;
+      }
+      
+      .slide img {
+        width: 100%;
+        height: auto;
+      }
+      
+      .prev,
+      .next {
+        position: absolute;
+        top: 50%;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        transform: translateY(-50%);
+        z-index: 100;
+      }
+      
+      .prev {
+        left: 10px;
+      }
+      
+      .next {
+        right: 10px;
+      }
+      
+      .prev:hover,
+      .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+      
+      /* Comments Styles */
+      .comment-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        max-width: 800px;
+        margin: 40px auto;
+      }
+      
+      .comment {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        border-top: 5px solid;
+        transition: transform 0.3s, box-shadow 0.3s;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .comment:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      }
+      
+      .comment:nth-child(1) {
+        border-top-color: #64b5f6;
+      }
+      
+      .comment:nth-child(2) {
+        border-top-color: #ff7043;
+      }
+      
+      .comment:nth-child(3) {
+        border-top-color: #f06292;
+      }
+      
+      .profile {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      
+      .profile img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-left: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .profile-info p {
+        margin: 0;
+        font-size: 14px;
+      }
+      
+      .profile-info .name {
+        font-weight: bold;
+        color: #333;
+      }
+      
+      .profile-info .email {
+        color: #777;
+      }
+      
+      .resume {
+        font-size: 14px;
+        color: #666;
+        margin: 5px 0 15px;
+        line-height: 1.4;
+      }
+      
+      .comment-text {
+        font-size: 15px;
+        line-height: 1.7;
+        color: #444;
+        position: relative;
+      }
+      
+      .comment-text::before {
+        content: '“';
+        font-size: 40px;
+        color: #ddd;
+        position: absolute;
+        top: -20px;
+        left: 10px;
+      }
+      
+      .comment-text::after {
+        content: '”';
+        font-size: 40px;
+        color: #ddd;
+        position: absolute;
+        bottom: -20px;
+        right: 10px;
+      }
+      
+      .comment-footer {
+        text-align: right;
+        margin-top: 10px;
+      }
+      
+      .comment-footer a {
+        text-decoration: none;
+        font-size: 14px;
+        color: #64b5f6;
+        transition: color 0.3s;
+      }
+      
+      .comment-footer a:hover {
+        color: #ff7043;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
+    <!-- Comments Section -->
     <div class="comment-section">
-        <div class="comment">
-            <div class="profile">
-                <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل">
-                <div class="profile-info">
-                    <p class="name">محمد</p>
-                    <p class="email">example@example.com</p>
-                </div>
-            </div>
-            <div class="resume">
-                <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
-            </div>
-            <div class="comment-text">
-                <p>خواستم بگم بنده به عنوان کسی که تا حالا توی یک جمع به صورت حضوری برنامه نویسی رو یاد نگرفته واقعا تجربه جالبی داشتم...</p>
-            </div>
-            <div class="comment-footer">
-                <a href="#">مشاهده کامل نظر</a>
-            </div>
+      <div class="comment">
+        <div class="profile">
+          <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل" />
+          <div class="profile-info">
+            <p class="name">محمد</p>
+            <p class="email">example@example.com</p>
+          </div>
         </div>
+        <div class="resume">
+          <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
+        </div>
+        <div class="comment-text">
+          <p>خواستم بگم بنده به عنوان کسی که تا حالا توی یک جمع به صورت حضوری برنامه نویسی رو یاد نگرفته واقعا تجربه جالبی داشتم...</p>
+        </div>
+        <div class="comment-footer">
+          <a href="#">مشاهده کامل نظر</a>
+        </div>
+      </div>
 
-        <div class="comment">
-            <div class="profile">
-                <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل">
-                <div class="profile-info">
-                    <p class="name">محمد</p>
-                    <p class="email">example@example.com</p>
-                </div>
-            </div>
-            <div class="resume">
-                <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
-            </div>
-            <div class="comment-text">
-                <p>جلسه دیروز خیلی خوب بود و از نظر من چند جلسه با کاغذ کار کنیم و درک بهتری از الگوریتم پیدا کنیم بهتره تا اینکه سریعاً بخواهیم بریم کد زدن با کامپیوتر...</p>
-            </div>
-            <div class="comment-footer">
-                <a href="#">مشاهده کامل نظر</a>
-            </div>
+      <div class="comment">
+        <div class="profile">
+          <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل" />
+          <div class="profile-info">
+            <p class="name">محمد</p>
+            <p class="email">example@example.com</p>
+          </div>
         </div>
+        <div class="resume">
+          <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
+        </div>
+        <div class="comment-text">
+          <p>جلسه دیروز خیلی خوب بود و از نظر من چند جلسه با کاغذ کار کنیم و درک بهتری از الگوریتم پیدا کنیم بهتره تا اینکه سریعاً بخواهیم بریم کد زدن با کامپیوتر...</p>
+        </div>
+        <div class="comment-footer">
+          <a href="#">مشاهده کامل نظر</a>
+        </div>
+      </div>
 
-        <div class="comment">
-            <div class="profile">
-                <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل">
-                <div class="profile-info">
-                    <p class="name">محمد</p>
-                    <p class="email">example@example.com</p>
-                </div>
-            </div>
-            <div class="resume">
-                <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
-            </div>
-            <div class="comment-text">
-                <p>کلاس دیروز عالی بود، من این رویکرد چالشی و حل‌ مسئله استاد رو برای جلسه اول دوست داشتم...</p>
-            </div>
-            <div class="comment-footer">
-                <a href="#">مشاهده کامل نظر</a>
-            </div>
+      <div class="comment">
+        <div class="profile">
+          <img src="./../../static/images/avatar.jpg" alt="عکس پروفایل" />
+          <div class="profile-info">
+            <p class="name">محمد</p>
+            <p class="email">example@example.com</p>
+          </div>
         </div>
+        <div class="resume">
+          <p>برنامه نویس وب با بیش از 5 سال تجربه</p>
+        </div>
+        <div class="comment-text">
+          <p>کلاس دیروز عالی بود، من این رویکرد چالشی و حل‌ مسئله استاد رو برای جلسه اول دوست داشتم...</p>
+        </div>
+        <div class="comment-footer">
+          <a href="#">مشاهده کامل نظر</a>
+        </div>
+      </div>
     </div>
-</body>
-
+  </body>
 {% endblock %}
