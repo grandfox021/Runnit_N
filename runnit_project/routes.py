@@ -405,7 +405,10 @@ def create_course():
     
     return render_template("create_course.html", form=form)
 
+@app.route("/about-us")
+def about_us():
 
+    return render_template("about.html")
 
 
 @app.route("/post/<int:post_id>",methods = ["POST","GET"])
