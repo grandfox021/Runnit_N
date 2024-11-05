@@ -109,6 +109,8 @@ def login () :
 
 
 
+
+
 @app.route("/sign-up",methods = ["POST","GET"])
 def signup() :
     if "user_id" in session :
@@ -128,7 +130,7 @@ def signup() :
 
         # hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
         new_user = User(firstname=first_name,lastname = last_name ,email = email, password=password,profile_pic = image)
-        
+
         db.session.add(new_user)
         db.session.commit()
         
@@ -142,6 +144,47 @@ def signup() :
     else : 
         return render_template("register.html", translations=translations[session["language"]])
 
+@app.route("/verify-email")
+@login_required
+def verify_email() :
+        user_id = session.get("user_id")
+        user = User.query.filter_by(user_id = user_id).first()
+        verification_code = str(random.randint(100000, 999999))  # Generate a 6-digit code
+
+        # Store verification code in session (for demo purposes; consider storing in DB)
+        session['email'] = user.email
+        email = session['email']
+        session['verification_code'] = verification_code
+
+        # Send verification email
+        send_verification_email_code(email,verification_code)
+        return redirect(url_for('check_verify_email',user_id = user_id))
+
+
+
+@app.route('/verify_email/<int:user_id>', methods=['GET', 'POST'])
+def check_verify_email(user_id):
+    user = User.query.filter_by(user_id = user_id).first()
+    if request.method == 'POST':
+        entered_code = request.form['verification_code']
+
+        # Check if the entered code matches the stored code
+        if entered_code == session.get('verification_code'):
+            user.email_verified = True
+            db.session.commit()
+            # Mark user as verified in the database, or proceed with signup completion
+            # Clear the session after verification
+            session.pop('verification_code', None)
+            session.pop('email', None)
+            flash('ایمیل شما تایید شد!', 'success')
+            return redirect(url_for('user_account'))
+        else:
+            flash('Incorrect verification code. Please try again.', 'danger')
+            return redirect(url_for('check_verify_email',user_id=user_id))
+
+
+    return render_template('verify_email.html')
+
 
 
 @app.route('/logout')
@@ -153,6 +196,18 @@ def logout():
     return redirect(url_for('home'))
 
 
+
+def send_verification_email_code(to_email,verification_code):
+
+    title = "email verification"
+    body = f'Your verification code is: {verification_code}'
+    sender_email = "hbsmtp635@gmail.com"
+    reciever_email = [to_email]
+    msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)
+    msg.send()
+    return "message sent successfully check your inbox"
+
+    
 
 # function to send the reset password email
 def send_reset_email(to_email, reset_link):
@@ -169,8 +224,8 @@ def send_reset_email(to_email, reset_link):
 
 def send_course_declined_email(to_email):
 
-    title = "وضعیت درخواست شما برای شرکت در در دوره"
-    body = F"hello this is a message from support to reset your pass please follow the link :"
+    title = "وضعیت درخواست شما برای شرکت د دوره"
+    body = "متاسفانه درخواست شما برای شرکت در در دوره رد شد به امید همکاری درآینده"
     sender_email = "hbsmtp635@gmail.com"
     reciever_email = [to_email]
     msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)
@@ -183,7 +238,7 @@ def send_course_approved_email(to_email):
 
 
     title = "وضعیت درخواست شما برای شرکت در در دوره"
-    body = F"hello this is a message from support to reset your pass please follow the link :"
+    body =  "تبریک درخواست شما بریا شرکت در دوره پذیرفته شد همکاران از طریق ایمیل یا تماس تلفنی با شما در ارتباط خواهند بود"
     sender_email = "hbsmtp635@gmail.com"
     reciever_email = [to_email]
     msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)
@@ -195,7 +250,7 @@ def send_course_waiting_email(to_email):
     
 
     title = "وضعیت درخواست شما برای شرکت در در دوره"
-    body = F"hello this is a message from support to reset your pass please follow the link :"
+    body = "درخواست برای شرکت در دوره با موفقیت ارسال شد بس از بررسی به شمااطلاع داده میشود"
     sender_email = "hbsmtp635@gmail.com"
     reciever_email = [to_email]
     msg = EmailMessage(subject=title,body=body,from_email=sender_email,to=reciever_email)

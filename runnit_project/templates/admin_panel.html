@@ -44,7 +44,11 @@
             <ul>
                 <li>نام و نامخانوادگی: {{user.firstname}} {{user.lastname}}</li>
                 <li>شماره تماس :{%if user.phone %}{{user.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید  :<a href="{{url_for('enter_phone')}}"> ثبت</a>{% endif %}</li>
-                <li>ایمیل :{{user.email}} </li>
+               
+                               <li>ایمیل :{% if user.email_verified == false %} <span style="color:red;" > {{user.email}}</span> : هنوز ایمیل خود را تایید نکرده اید<a href="{{url_for('verify_email')}}">تایید ایمیل</a> {% else %}<span style="color:green;" >{{user.email}}</span>{% endif %}</li> 
+                    
+
+                    
             </ul>
         </div>
 

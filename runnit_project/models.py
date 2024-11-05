@@ -18,6 +18,7 @@ class User(db.Model):
     firstname = db.Column(db.String(50), nullable=False)
     lastname = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    email_verified = db.Column(db.Boolean, default=False)
     phone_number = db.Column(db.String(15), nullable=True)
     profile_pic = db.Column(db.String(200))
     resume = db.Column(db.String(150), nullable=True)  # Stores the resume file path
