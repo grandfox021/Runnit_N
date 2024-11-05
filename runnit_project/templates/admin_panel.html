@@ -58,7 +58,7 @@
                     <h2>دوره ها</h2>
                     <ul>{% if courses %}
                         {% for course in  courses %}
-                        <li><a href="{{url_for('course_detail' , course_id = course.course_id)}}"> {{course.name}}</a><div>  عملیات :</div><a href="{{url_for('close_course',course_id = course.course_id)}}"> بستن دوره </a> <br> <a href="{{url_for('open_course',course_id = course.course_id)}}">  باز کردن دوره </a><br> <a href="{{url_for('view_course_resumes',course_id = course.course_id)}}"> بررسی رزومه های ارسالی برای این دوره</a><hr>
+                        <li><a href="{{url_for('course_detail' , course_id = course.course_id)}}"> {{course.name}}</a><div>  عملیات :</div><a href="{{url_for('close_course',course_id = course.course_id)}}"> بستن دوره </a> <br> <a href="{{url_for('open_course',course_id = course.course_id)}}">  باز کردن دوره </a> <br><a href="{{url_for('delete_course',course_id = course.course_id)}}"> حذف دوره </a><br> <a href="{{url_for('view_course_resumes',course_id = course.course_id)}}"> بررسی رزومه های ارسالی برای این دوره</a><hr>
                          <a href="{{url_for('view_course_participants',course_id = course.course_id)}}">مشاهده اعضای شرکت کننده در دوره </a><hr>   
                             {% endfor %}
                     </ul>
@@ -77,7 +77,7 @@
             <h2>مطالب</h2>
             <ul>{% if posts %}
                 {% for post in posts %}  
-                <li><a href="{{url_for('post_detail',post_id = post.post_id)}}">{{post.title}}</a></li>
+                <li><a href="{{url_for('post_detail',post_id = post.post_id)}}">{{post.title}}</a> <a href="{{url_for('delete_post',post_id = post.post_id)}}"> حذف مطلب</a></li>
                 {% endfor %}
             </ul>
            ایجاد مطلب جدید: <a href="{{ url_for('create_post') }}"> create a new post</a></li>

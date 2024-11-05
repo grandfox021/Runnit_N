@@ -730,5 +730,24 @@ def delet_participants(participant_id):
     flash("شرکت کننده از دوره حذف شد")
     return redirect(url_for('view_course_participants',course_id = course_id))
 
-@app.route("")
-def delet_post()
+@app.route("/delete-post/<int:post_id>")
+@login_required
+def delete_post(post_id):
+
+    user = User.query.filter_by(user_id = session.get("user_id")).first()
+    post = Post.query.filter_by(post_id = post_id).first()
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(url_for("admin_panel" , user=user))
+
+@app.route("/delete-course/<int:course_id>")
+@login_required
+def delete_course(course_id):
+    
+    user = User.query.filter_by(user_id = session.get("user_id")).first()
+    course = Course.query.filter_by(course_id = course_id).first()
+    db.session.delete(course)
+    db.session.commit()
+
+    return redirect(url_for("admin_panel" , user=user))
