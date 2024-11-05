@@ -1,0 +1,46 @@
+{% extends './shared/base.html' %}
+
+{% block content %}
+
+
+
+
+<!-- content -->
+<main id="home-page">
+    <div class="container">
+        <section class="terms-items">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="custom-alert">
+                <ul class="flashes">
+                    {% for message in messages %}
+                    <li style="color:block;  align-items: center;">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+            <header>
+                <h2>  معرفی شرکت گلدیس </h2>
+                <h3> شرکت گلدیس برگزار کننده رایگان دوره های کارآموزی به منظور کشف و استخدام استعداد های برتر است </h3>
+            </header>
+            <div class="row">
+                <!-- col -->
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 term-col">
+                    <article>
+                        <a href="{{url_for('detail_post_demo')}}" class="img-layer"><img src="/../../static/images/pic/1.jpg"></a>
+                        <h2><a href=""> آموزش برنامه نویسی  </a></h2>
+                        <span> رایگان </span>
+                        <i>1:52:32</i>
+                    </article>
+                </div>    
+                <!-- /col -->
+                 
+              
+
+            </div>
+        </section>
+    </div>
+</main>
+<!-- /content -->
+{% endblock %}

@@ -1,0 +1,15 @@
+
+
+
+<h1>all posts :</h2>
+    {% for post in posts %}
+        
+<div>
+    <div>Title : {{post.title}}</div>
+    <div> body : {{post.body}}</div>
+    <div> image : <img src="{{url_for('static' , filename='images/uploads/' + post.image)}}" alt=""></div>
+    <div> <p>Author :{{post.user_id}}</p></div>
+</div>
+
+    {% endfor %}
+        
