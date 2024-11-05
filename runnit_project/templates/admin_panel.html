@@ -1,52 +1,200 @@
+{% extends './shared/base.html' %}
 
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحه ادمین</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/style2.css">
-    <style>
-        header {
-            background-image: linear-gradient(270deg, #7728b8, #b95ff0e0 23.78%, #7728b8f2 49.83%, #b95ff0e0 72.74%, #7728b8);
-            color: white;
-            text-align: center;
-            padding: 10px 0;
+{% block title %}پنل مدیریت | Runit{% endblock %}
+
+{% block content %}
+<style>
+    /* استایل‌های کلی پنل مدیریت */
+    .admin-panel {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #f4f6f9;
+        border-radius: 16px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1, h2, h3 {
+        color: #5e3b8f;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin-top: 30px;
+        color: #5e3b8f;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+        margin-top: 15px;
+    }
+
+    /* استایل‌های برای پیام‌ها */
+    .custom-alert {
+        margin-bottom: 25px;
+        padding: 15px;
+        background-color: #e8d8f7;
+        border-radius: 8px;
+        border-left: 5px solid #5e3b8f;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-alert .flashes {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .custom-alert .flashes .alert-message {
+        color: #5e3b8f;
+        font-size: 1.1rem;
+    }
+
+    /* استایل اطلاعات شخصی ادمین */
+    .admin-info {
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+    }
+
+    .admin-info .info-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .admin-info .info-list li {
+        padding: 14px 0;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #ddd;
+        color: #444;
+    }
+
+    .admin-info .info-list a {
+        color: #5e3b8f;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .admin-info .info-list a:hover {
+        text-decoration: underline;
+    }
+
+    /* استایل دوره‌ها */
+    .courses, .posts, .participants-info {
+        background-color: #ffffff;
+        padding: 25px;
+        margin-top: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .course-list, .post-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .course-item, .post-link {
+        font-size: 1rem;
+        margin-bottom: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f1f1;
+        color: #555;
+    }
+
+    .course-item .course-link, .post-link {
+        color: #5e3b8f;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .course-item .course-link:hover, .post-link:hover {
+        text-decoration: underline;
+    }
+
+    /* استایل دکمه‌ها */
+    .btn-action, .btn-create {
+        padding: 12px 25px;
+        margin: 8px 0;
+        background-color: transparent;
+        color: #5e3b8f;
+        text-decoration: none;
+        border: 2px solid #5e3b8f;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        display: inline-block;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* استایل hover و active برای دکمه‌ها */
+    .btn-action:hover, .btn-create:hover {
+        background-color: #5e3b8f;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-create {
+        font-size: 1.2rem;
+        display: inline-block;
+        margin-top: 25px;
+    }
+
+    .divider {
+        border-top: 1px solid #eee;
+        margin: 20px 0;
+    }
+
+    /* استایل برای صفحه‌نمایش موبایل */
+    @media screen and (max-width: 768px) {
+        .admin-panel {
+            padding: 20px;
         }
-    </style>
-</head>
 
-<body>
-    <header>
-        <h1>صفحه مدیریت</h1>
-    </header>
+        .course-actions a {
+            display: block;
+            margin-bottom: 12px;
+        }
 
-    <div class="admin-panel">
-        <h1> </h1>
+        .btn-action, .btn-create {
+            width: 100%;
+            text-align: center;
+        }
 
-        <h1>پنل مدیریت : {{user.firstname}} {{user.lastname}} </h1>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="custom-alert">
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+
+<div class="admin-panel">
+    <!-- نمایش پیام‌های خطا یا موفقیت -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="custom-alert">
             <ul class="flashes">
                 {% for message in messages %}
-                <li style="color:red;">{{ message }}</li>
+                <li class="alert-message">{{ message }}</li>
                 {% endfor %}
             </ul>
-            </div>
-        {% endif %}
+        </div>
+    {% endif %}
     {% endwith %}
-    
-        <ul>
-            
-        <div class="courses">
-            <h2>اطلاعات شخصی ادمین</h2>
-            <ul>
-                <li>نام و نامخانوادگی: {{user.firstname}} {{user.lastname}}</li>
-                <li>شماره تماس :{%if user.phone %}{{user.phone}}{% else %} شما هنوز شماره ای ثبت نکرده اید  :<a href="{{url_for('enter_phone')}}"> ثبت</a>{% endif %}</li>
-               
-                               <li>ایمیل :{% if user.email_verified == false %} <span style="color:red;" > {{user.email}}</span> : هنوز ایمیل خود را تایید نکرده اید<a href="{{url_for('verify_email')}}">تایید ایمیل</a> {% else %}<span style="color:green;" >{{user.email}}</span>{% endif %}</li> 
-                    
 
                     
             </ul>
@@ -64,13 +212,29 @@
                     </ul>
                     ایجاد دوره جدید :<a href="{{ url_for('create_course') }}"> ثبت</a></li>           
                 </div>
+    <!-- اطلاعات شخصی ادمین -->
+    <section class="admin-info">
+        <h1>پنل مدیریت : {{ user.firstname }} {{ user.lastname }}</h1>
+        <h2>اطلاعات شخصی</h2>
+        <ul class="info-list">
+            <li><strong>نام و نام‌خانوادگی:</strong> {{ user.firstname }} {{ user.lastname }}</li>
+            <li><strong>شماره تماس:</strong> 
+                {% if user.phone %}
+                    {{ user.phone }}
                 {% else %}
-                هنوز دوره ای ایجاد نکرده اید :
-        
-                 <a href="{{ url_for('create_course') }}"> ایجاد دوره جدید </a></li>
-                </div> 
+                    شما هنوز شماره‌ای ثبت نکرده‌اید. <a href="{{ url_for('enter_phone') }}">ثبت شماره</a>
                 {% endif %}
-      
+            </li>
+            <li><strong>ایمیل:</strong> 
+                {% if user.email_verified == false %}
+                    <span class="alert-email">{{ user.email }}</span> - هنوز ایمیل خود را تایید نکرده‌اید. 
+                    <a href="{{ url_for('verify_email') }}">تایید ایمیل</a>
+                {% else %}
+                    <span class="verified-email">{{ user.email }}</span>
+                {% endif %}
+            </li>
+        </ul>
+    </section>
 
         <!-- نمایش مطالب -->
         <div class="courses">
@@ -78,31 +242,55 @@
             <ul>{% if posts %}
                 {% for post in posts %}  
                 <li><a href="{{url_for('post_detail',post_id = post.post_id)}}">{{post.title}}</a> <a href="{{url_for('delete_post',post_id = post.post_id)}}"> حذف مطلب</a></li>
+    <!-- نمایش دوره‌های ایجاد شده -->
+    <section class="courses">
+        <h2>دوره‌ها</h2>
+        {% if courses %}
+            <ul class="course-list">
+                {% for course in courses %}
+                <li class="course-item">
+                    <a href="{{ url_for('course_detail', course_id=course.course_id) }}" class="course-link">{{ course.name }}</a>
+                    <div class="course-actions">
+                        <a href="{{ url_for('close_course', course_id=course.course_id) }}" class="btn-action">بستن دوره</a>
+                        <a href="{{ url_for('open_course', course_id=course.course_id) }}" class="btn-action">باز کردن دوره</a>
+                        <a href="{{ url_for('view_course_resumes', course_id=course.course_id) }}" class="btn-action">بررسی رزومه‌ها</a>
+                        <a href="{{ url_for('view_course_participants', course_id=course.course_id) }}" class="btn-action">مشاهده اعضای شرکت‌کننده</a>
+                    </div>
+                    <hr class="divider">
+                </li>
                 {% endfor %}
             </ul>
-           ایجاد مطلب جدید: <a href="{{ url_for('create_post') }}"> create a new post</a></li>
-        </div>
+            <p>ایجاد دوره جدید: <a href="{{ url_for('create_course') }}" class="btn-create">ثبت دوره</a></p>
         {% else %}
-        هنوز مطلبی ایجاد نکرده اید :
-
-        <a href="{{ url_for('create_post') }}"> ایجاد مطلب جدید</a></li>
-    </div>  
+            <p>هنوز دوره‌ای ایجاد نکرده‌اید. <a href="{{ url_for('create_course') }}" class="btn-create">ایجاد دوره جدید</a></p>
         {% endif %}
+    </section>
 
+    <!-- نمایش مطالب -->
+    <section class="posts">
+        <h2>مطالب</h2>
+        {% if posts %}
+            <ul class="post-list">
+                {% for post in posts %}
+                <li><a href="{{ url_for('post_detail', post_id=post.post_id) }}" class="post-link">{{ post.title }}</a></li>
+                {% endfor %}
+            </ul>
+            <p>ایجاد مطلب جدید: <a href="{{ url_for('create_post') }}" class="btn-create">ایجاد مطلب</a></p>
+        {% else %}
+            <p>هنوز مطلبی ایجاد نکرده‌اید. <a href="{{ url_for('create_post') }}" class="btn-create">ایجاد مطلب جدید</a></p>
+        {% endif %}
+    </section>
 
-
-        <!-- نمایش اطلاعات شرکت‌کننده‌ها -->
-        <div class="participant-info">
-            <h2>اطلاعات شرکت کننده</h2>
-            <div class="profile">
-                <h3>پروفایل شرکت کننده</h3>
-                <p>نام: شرکت کننده 1</p>
-                <p>ایمیل: example@example.com</p>
-                <p>تاریخ عضویت: 01/01/2021</p>
-            </div>
+    <!-- نمایش اطلاعات شرکت‌کننده‌ها -->
+    <section class="participants-info">
+        <h2>اطلاعات شرکت‌کنندگان</h2>
+        <div class="participant-profile">
+            <h3>پروفایل شرکت‌کننده</h3>
+            <p><strong>نام:</strong> شرکت‌کننده 1</p>
+            <p><strong>ایمیل:</strong> example@example.com</p>
+            <p><strong>تاریخ عضویت:</strong> 01/01/2021</p>
         </div>
-    </div>
-</body>
+    </section>
+</div>
 
-</html>
-
+{% endblock %}

@@ -1,0 +1,35 @@
+
+
+<h1>Admin profile : </h1>
+
+    <ul>
+        <li>full name : {{user.firstname}} {{user.lastname}}</li>
+    
+    {% if posts %}
+        
+    
+        
+    {% for post in posts %}
+        <ol>posts :
+        <li><a href="{{url_for('post_detail',post_id = post.post_id)}}">{{post.title}}</li>
+        </ol>
+    {% endfor %}
+    {% endif %}
+        <li>create a new post : <a href="{{ url_for('create_post') }}"> create a new post</a></li>
+        
+        {% if courses %}
+            
+        
+            
+        courses :
+        {% for course in  courses %}
+        <li> 
+            
+             {{course}}
+            
+            
+        </li>{% endfor %}{% endif %}
+    </ul>
+
+
+
