@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست شرکت‌کنندگان</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007BFF;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .participant-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .participant {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9fafb;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        .participant:hover {
+            background-color: #e9ecef;
+        }
+        .participant-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+        .remove-btn {
+            padding: 10px 15px;
+            font-size: 0.9em;
+            color: white;
+            background-color: #ff4d4f;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .remove-btn:hover {
+            background-color: #d9363e;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="custom-alert">
+        <ul class="flashes">
+            {% for message in messages %}
+            <li style="color:red;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+{% endwith %}
+
+    <div class="container">
+        <h1>شرکت‌کنندگان دوره</h1>
+        <ul class="participant-list">
+            {% for participant in participants %}
+            <li class="participant">
+                <span class="participant-name">{{ participant.user.firstname }} {{ participant.user.lastname }}</span>
+                <form action="{{ url_for('delet_participants', participant_id=participant.id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="remove-btn">حذف شرکت کننده از دوره</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pending Resumes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 40px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn-accept {
+            color: white;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-reject {
+            color: white;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

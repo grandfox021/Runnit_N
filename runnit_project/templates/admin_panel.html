@@ -55,6 +55,7 @@
                     <ul>{% if courses %}
                         {% for course in  courses %}
                         <li><a href="{{url_for('course_detail' , course_id = course.course_id)}}"> {{course.name}}</a><div>  عملیات :</div><a href="{{url_for('close_course',course_id = course.course_id)}}"> بستن دوره </a> <br> <a href="{{url_for('open_course',course_id = course.course_id)}}">  باز کردن دوره </a><br> <a href="{{url_for('view_course_resumes',course_id = course.course_id)}}"> بررسی رزومه های ارسالی برای این دوره</a><hr>
+                         <a href="{{url_for('view_course_participants',course_id = course.course_id)}}">مشاهده اعضای شرکت کننده در دوره </a><hr>   
                             {% endfor %}
                     </ul>
                     ایجاد دوره جدید :<a href="{{ url_for('create_course') }}"> ثبت</a></li>           

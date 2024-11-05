@@ -12,7 +12,18 @@
                 <div class="divider my-4"></div>
             </div>
         </div>
-        
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="custom-alert">
+            <ul class="flashes">
+                {% for message in messages %}
+                <li style="color:red;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+    
         <div class="row">
             {% for course in courses %}
             <div class="col-lg-4 col-md-6 mb-5">
